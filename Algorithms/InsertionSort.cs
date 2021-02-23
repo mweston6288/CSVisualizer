@@ -1,13 +1,13 @@
-/*
-	Insertion Sort
-*/
-
 ﻿namespace Algorithms
 {
 
     class InsertionSort : SortingAlgorithm
     {
-        public override void sort(int[] array, int size)
+        public InsertionSort(int size) : base(size)
+        {
+        }
+
+        public override void sort()
         {
             int i, j, k;
 

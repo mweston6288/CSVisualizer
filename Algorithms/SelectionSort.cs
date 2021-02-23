@@ -2,8 +2,12 @@
 namespace Algorithms
 {
     class SelectionSort : SortingAlgorithm
-    { 
-    public override void sort(int[] array, int size)
+    {
+        public SelectionSort(int size) : base(size)
+        {
+        }
+
+        public override void sort()
         {
             int smallest, i, j;
 

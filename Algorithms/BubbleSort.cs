@@ -2,7 +2,13 @@
 {
     class BubbleSort : SortingAlgorithm
     {
-        public override void sort(int[] array, int size)
+        public BubbleSort(int size) :base(size)
+        {
+            
+        }
+
+
+        public override void sort()
         {
             int i, j;
             for (i = 0; i < size; i++)
