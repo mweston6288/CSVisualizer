@@ -1,0 +1,10 @@
+C:\Users\Mick\UITest\bin\Debug\UITest.exe.config
+C:\Users\Mick\UITest\bin\Debug\UITest.exe
+C:\Users\Mick\UITest\bin\Debug\UITest.pdb
+C:\Users\Mick\UITest\obj\Debug\UITest.csprojAssemblyReference.cache
+C:\Users\Mick\UITest\obj\Debug\UITest.Form1.resources
+C:\Users\Mick\UITest\obj\Debug\UITest.Properties.Resources.resources
+C:\Users\Mick\UITest\obj\Debug\UITest.csproj.GenerateResource.cache
+C:\Users\Mick\UITest\obj\Debug\UITest.csproj.CoreCompileInputs.cache
+C:\Users\Mick\UITest\obj\Debug\UITest.exe
+C:\Users\Mick\UITest\obj\Debug\UITest.pdb
