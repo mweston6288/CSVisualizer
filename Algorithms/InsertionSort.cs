@@ -9,23 +9,26 @@
 
         public override void sort()
         {
+            StackSize++;
             int i, j, k;
 
-            for (i = 1; i < size; i++)
+            for (i = 1; i < Size; i++)
             {
-                k = array[i];
+                k = Array[i];
 
                 for (j = i - 1; j >= 0; j--)
                 {
-                    if (k < array[j])
+                    if (k < Array[j])
                     {
-                        array[j + 1] = array[j];
+                        Array[j + 1] = Array[j];
                     }
                     else
                         break;
                 }
-                array[j + 1] = k;
+                Array[j + 1] = k;
             }
+            StackSize--;
+
         }
     }
 }

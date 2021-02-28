@@ -8,6 +8,7 @@ namespace Algorithms
         }
         void quickSort(int low, int high)
         {
+            StackSize++;
             if (low < high)
             {
                 int split = partition(low, high);
@@ -15,6 +16,8 @@ namespace Algorithms
                 quickSort(low, split - 1);
                 quickSort(split + 1, high);
             }
+            StackSize--;
+
         }
 
         int partition(int low, int high)
@@ -23,32 +26,32 @@ namespace Algorithms
             if (low >= high)
                 return low;
 
-            i = array[low];
+            i = Array[low];
             lowPosition = low;
             low++;
 
             while (low <= high)
             {
-                while (low <= high && array[low] <= array[lowPosition])
+                while (low <= high && Array[low] <= Array[lowPosition])
                     low++;
 
-                while (high >= low && array[high] > array[lowPosition])
+                while (high >= low && Array[high] > Array[lowPosition])
                     high--;
                 if (low < high)
                 {
-                    swap(ref array[low], ref array[high]);
+                    swap(ref Array[low], ref Array[high]);
                 }
             }
 
             // Finally we swap the pivot with the point high was pointing to
-            swap(ref array[lowPosition], ref array[high]);
+            swap(ref Array[lowPosition], ref Array[high]);
 
             return high;
         }
 
         public override void sort()
         {
-            quickSort(0, size - 1);
+            quickSort(0, Size - 1);
         }
     }
 }

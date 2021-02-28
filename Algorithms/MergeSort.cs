@@ -12,7 +12,7 @@ namespace Algorithms{
 
 			int[] leftArray = new int[n1];
 			int[] rightArray = new int[n2];
-
+            MemoryUse += sizeof(int) * (high - low + 1);
 			
 			for (i = 0; i < n1; i++)
 			{
@@ -55,10 +55,13 @@ namespace Algorithms{
 				j++;
 				k++;
 			}
-		}
+            MemoryUse -= sizeof(int) * (high - low + 1);
 
-		private void sort(int[] array, int low, int high){
-			if (low < high)
+        }
+
+        private void sort(int[] array, int low, int high){
+            StackSize++;
+            if (low < high)
 			{
 				int med = (low + high - 1) / 2;
 
@@ -67,9 +70,11 @@ namespace Algorithms{
 
 				merge(array, low, med, high);
 			}
-		}
-		public override void sort(){
-			sort(array, 0, size-1);
+            StackSize--;
+
+        }
+        public override void sort(){
+			sort(Array, 0, Size - 1);
 		}
 	}
 }

@@ -5,14 +5,19 @@ namespace Algorithms
     // It will make an array of that size and then shuffle the elements in the array
     abstract class SortingAlgorithm : Algorithm
     {
-        protected int size;
-        protected int[] array;
+        private int size;
+        private int[] array;
 
-        public SortingAlgorithm(int size)
+        protected int Size { get => size; set => size = value; }
+        protected int[] Array { get => array; set => array = value; }
+
+        protected SortingAlgorithm(int size)
         {
             this.size = size;
             buildArray();
             print();
+            MemoryUse += sizeof(int) * size;
+            Console.WriteLine(MemoryUse);
         }
         // Build an array and fill it with integers from 1 to size, then shuffle them
         private void buildArray()

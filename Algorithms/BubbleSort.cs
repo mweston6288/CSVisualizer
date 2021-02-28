@@ -10,17 +10,19 @@
 
         public override void sort()
         {
+            StackSize++;
             int i, j;
-            for (i = 0; i < size; i++)
+            for (i = 0; i < Size; i++)
             {
-                for (j = 0; j < size - 1 - i; j++)
+                for (j = 0; j < Size - 1 - i; j++)
                 {
-                    if (array[j] > array[j + 1])
+                    if (Array[j] > Array[j + 1])
                     {
-                        swap(ref array[j], ref array[j + 1]);
+                        swap(ref Array[j], ref Array[j + 1]);
                     }
                 }
             }
+            StackSize--;
         }
     }
 }

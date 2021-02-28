@@ -12,15 +12,19 @@ namespace Algorithms
             int smallest, i, j;
 
 
-            for (i = 0; i < size; i++)
+            for (i = 0; i < Size; i++)
             {
+                StackSize++;
+
                 smallest = i;
-                for (j = i; j < size; j++)
+                for (j = i; j < Size; j++)
                 {
-                    if (array[j] < array[smallest])
+                    if (Array[j] < Array[smallest])
                         smallest = j;
                 }
-                swap(ref array[i], ref array[smallest]);
+                swap(ref Array[i], ref Array[smallest]);
+                StackSize--;
+
             }
         }
     }

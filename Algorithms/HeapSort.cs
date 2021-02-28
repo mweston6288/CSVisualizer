@@ -12,9 +12,9 @@ namespace Algorithms
         {
             int i;
             Heapify();
-            for(i = size - 1; i > 0; i--)
+            for(i = Size - 1; i > 0; i--)
             {
-                swap(ref array[0], ref array[i]);
+                swap(ref Array[0], ref Array[i]);
                 Percolate(i);
             }
         }
@@ -22,13 +22,13 @@ namespace Algorithms
         private void Heapify()
         {
             int i, parent, child;
-            for (i = 1; i < size; i++)
+            for (i = 1; i < Size; i++)
             {
                 child = i;
                 parent = (i - 1) / 2;
-                while (array[child] > array[parent])
+                while (Array[child] > Array[parent])
                 {
-                    swap(ref array[child], ref array[parent]);
+                    swap(ref Array[child], ref Array[parent]);
                     child = parent;
                     parent = (child - 1) / 2;
                 }
@@ -47,12 +47,12 @@ namespace Algorithms
                 if (right < bound)
                 {
                     // right child is the greater child
-                    if (array[right] > array[left])
+                    if (Array[right] > Array[left])
                     {
                         // swap right child if greater than parent
-                        if (array[right] > array[parent])
+                        if (Array[right] > Array[parent])
                         {
-                            swap(ref array[parent], ref array[right]);
+                            swap(ref Array[parent], ref Array[right]);
                             parent = right;
                         }
                         // If parent is greater than right, then it's greater than left too
@@ -62,9 +62,9 @@ namespace Algorithms
                     else
                     {
                         // swap left child if greater than parent
-                        if (array[left] > array[parent])
+                        if (Array[left] > Array[parent])
                         {
-                            swap(ref array[parent], ref array[left]);
+                            swap(ref Array[parent], ref Array[left]);
                             parent = left;
                         }
                         // If parent is greater than left, then it's greater than right too
@@ -75,9 +75,9 @@ namespace Algorithms
                 else if (left < bound)
                 {
                     // swap left child if greater than parent
-                    if (array[left] > array[parent])
+                    if (Array[left] > Array[parent])
                     {
-                        swap(ref array[parent], ref array[left]);
+                        swap(ref Array[parent], ref Array[left]);
                     }
                     // This scenario can only happen if you're at the end of bound, so we can just return
                     return;
