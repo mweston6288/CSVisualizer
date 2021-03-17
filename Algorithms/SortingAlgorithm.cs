@@ -7,6 +7,7 @@ namespace Algorithms
     {
         private int size;
         private int[] array;
+        private int swaps;
 
         protected int Size { get => size; set => size = value; }
         protected int[] Array { get => array; set => array = value; }
@@ -14,13 +15,13 @@ namespace Algorithms
         protected SortingAlgorithm(int size)
         {
             this.size = size;
-            buildArray();
+            BuildArray();
+            swaps = 0;
             print();
             MemoryUse += sizeof(int) * size;
-            Console.WriteLine(MemoryUse);
         }
         // Build an array and fill it with integers from 1 to size, then shuffle them
-        private void buildArray()
+        private void BuildArray()
         {
             int i;
             array = new int[size];
@@ -44,6 +45,7 @@ namespace Algorithms
             int temp= x;
             x = y;
             y = temp;
+            swaps++;
         }
         // Mostly a debugging tool
         public void print()
