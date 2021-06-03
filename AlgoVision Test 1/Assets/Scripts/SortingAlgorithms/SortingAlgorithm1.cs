@@ -10,12 +10,13 @@ public abstract class SortingAlgorithm1 : Algorithm
     protected ArrayIndex[] array;
     public int size;
     public int[] arr;
-    protected Queue<short[]> q = new Queue<short[]>();
+    protected Queue<QueueCommand> queue = new Queue<QueueCommand>();
     private GameObject canvas;
     private Text showText;
+
     // This is called in readQueue's default command.
     // The class that extends SortingAlgorithm has to define extra commands
-    abstract public IEnumerator extendCommands(short[] command);
+    abstract public IEnumerator extendCommands(QueueCommand q);
 
     protected class ArrayIndex{
         public GameObject o;
@@ -29,6 +30,7 @@ public abstract class SortingAlgorithm1 : Algorithm
             o.transform.position = new Vector3(value * 2, 3, 0);
             //o.transform.localScale = new Vector3(1, value + 1, 1); 
         }
+        // Build an ArrayIndex item and specify its index, and consequent location
         public ArrayIndex(int value, int index, GameObject boxPrefab){
             // build an ArrayIndex item for the main array. This will have an initial height, value, and position
             this.value = value;
@@ -42,13 +44,64 @@ public abstract class SortingAlgorithm1 : Algorithm
 
         }
    }
+
+   public class QueueCommand{
+       /*
+            Refer to readQueue for the meaning of each command Id
+            Refer to colorChange for the meaning of each colorId
+
+            For arrayId:
+                0 - ArrayIndex array
+                1 - AuxArrayIndex auxArray (used in SortingAlgorithmWithAuxArray)
+       */
+       
+       public short commandId;
+       public int index1, index2;
+       public short arrayId, colorId;
+
+        // Use this constructor when you just want the queue to pause for a moment
+        public QueueCommand(){
+           commandId = 0;
+           arrayId = 0;
+        }
+        // Use this constructor when you need to color multiple indices
+        // Depending on the command, it will color only array[index1] and array[index2]
+        // or it will color every index from index1 to index2 inclusive
+       public QueueCommand(short commandId, int index1, int index2, short arrayId, short colorId){
+           this.commandId = commandId;
+           this.index1 = index1;
+           this.index2 = index2;
+           this.arrayId = arrayId;
+           this.colorId = colorId;
+       }
+       // Use this constructor when you need to color only one index
+       public QueueCommand(short commandId, int index1, short arrayId, short colorId){
+           this.commandId = commandId;
+           this.index1 = index1;
+           this.arrayId = arrayId;
+           this.colorId = colorId;
+       }       
+       // Use this construcotr when you need to do anything else with your two indices
+       public QueueCommand(short commandId, int index1, int index2, short arrayId){
+           this.commandId = commandId;
+           this.index1 = index1;
+           this.index2 = index2;
+           this.arrayId = arrayId;
+       }
+       public QueueCommand(short commandId, short arrayId, short colorId){
+           this.commandId = commandId;
+           this.arrayId = arrayId;
+           this.colorId = colorId;
+       }
+   }
     // build the visible array and the array used for command building
     // They will be in sorted order and then shuffled
     protected void buildArray(GameObject boxPrefab, GameObject canvas){
         int i;
         this.canvas = canvas;
         showText = canvas.transform.GetChild(4).GetComponent<Text>();
-        for (i = 0; i < size; i++){
+
+        for(i = 0; i < size; i++){
             arr[i] = i;
         }
         shuffle();
@@ -94,17 +147,51 @@ public abstract class SortingAlgorithm1 : Algorithm
     // Go through the queue
     public IEnumerator readQueue()
     {
-        foreach(short[] instr in q){
-            Debug.Log(instr[0]);
+        foreach(QueueCommand q in queue){
+            Debug.Log(q.commandId);
 
             // Since some of these methods have an auxArray version,
             // we'll jump over to that whenever we want to do something with auxArray
-            if (instr[3] == 1){
-                yield return extendCommands(instr);
+            if (q.arrayId != 0){
+                yield return extendCommands(q);
             }
             else{
-                switch (instr[0])
+                switch (q.commandId)
                 {
+                    case 0: // wait
+                        yield return new WaitForSeconds(time);
+                        break;
+                    
+                    case 1: // change the color of two indices
+                        colorChange(q.index1, q.colorId, array);
+                        colorChange(q.index2, q.colorId, array);
+                        Debug.Log("Comparing values at Index "+ q.index1 + " and "+ q.index2);
+                        break;
+                    case 2: // swap the positions of two indices
+                        swap(ref array[q.index1], ref array[q.index2]);
+                        Debug.Log("Swapping values at Index "+ q.index1 + " and "+ q.index2);
+
+                        break;                        
+                    case 3: // change the color of just a single index
+                        colorChange(q.index1, q.colorId, array);
+                        break;
+                    case 4: // raise two indices up, used to visualize they are being compared
+                        array[q.index1].o.transform.position = new Vector3(array[q.index1].o.transform.position.x, array[q.index1].o.transform.position.y + 1, 0);
+                        array[q.index2].o.transform.position = new Vector3(array[q.index2].o.transform.position.x, array[q.index2].o.transform.position.y + 1, 0);
+                        showText.enabled = true;
+                        showText.text = "Comparing " + array[q.index1].value + " to " + array[q.index2].value;
+                        showText.color = Color.red;                        break;
+                    case 5: // raise two indices down, used to visualize they are being uncompared
+                        array[q.index1].o.transform.position = new Vector3(array[q.index1].o.transform.position.x, array[q.index1].o.transform.position.y - 1, 0);
+                        array[q.index2].o.transform.position = new Vector3(array[q.index2].o.transform.position.x, array[q.index2].o.transform.position.y - 1, 0);
+                        break;
+                    case 6: // change the color of every index from index1 to index2 inclusive
+                        for (int i = q.index1; i <= q.index2; i++){
+                            colorChange(i, q.colorId, array);
+                        }
+                        break;                        
+
+                 /*
                     case 0: // set the index of instr[1] from the array indicated by instr[3] to the value in instr[2]
                         writeToIndex(array, instr[1], instr[2]);
                         Debug.Log("Index "+ instr[1] + " set to "+ instr[2]);
@@ -122,19 +209,17 @@ public abstract class SortingAlgorithm1 : Algorithm
                         break;
                     case 3: // change array[instr[1]] and array[instr[2]] red
                         colorChange(instr[1], 1, array);
-                        colorChange(instr[2], 3, array);
+                        colorChange(instr[2], 1, array);
                         array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.position.x, array[instr[1]].o.transform.position.y + 1, 0);
                         array[instr[2]].o.transform.position = new Vector3(array[instr[2]].o.transform.position.x, array[instr[2]].o.transform.position.y + 1, 0);
-                        showText.enabled = true;
-                        showText.text = "Comparing " + array[instr[1]].value + " to " + array[instr[2]].value;
                         Debug.Log("Comparing values at Index "+ instr[1] + " and "+ instr[2]);
-                        showText.color = Color.red;
+
                         yield return new WaitForSeconds(time);
                         break;
                     case 4: // change array[instr[1]] and array[instr[2]] white
                         colorChange(instr[1], 0, array);
                         colorChange(instr[2], 0, array);
-                        array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.position.x, array[instr[1]].o.transform.position.y - 1, 0);
+array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.position.x, array[instr[1]].o.transform.position.y - 1, 0);
                         array[instr[2]].o.transform.position = new Vector3(array[instr[2]].o.transform.position.x, array[instr[2]].o.transform.position.y - 1, 0);
                         break;
                     case 5: // change array[instr[1]] and array[instr[2]] blue
@@ -156,21 +241,23 @@ public abstract class SortingAlgorithm1 : Algorithm
                         }
                         break;
                     case 8: // Make all elements green, indicating the sort is complete
+                        Debug.Log("The array is sorted");
                         for (int i = 0; i < size; i++){
                             colorChange(i, 2, array);
                             yield return new WaitForSeconds(time);
                         }
-                        showText.text = "The array is sorted";
-                        showText.color = Color.green;
                         break;
                     
                     default:
                     // Go to the other set of commands
                         yield return extendCommands(instr);
                         break;
+                        */
                 }
             }
-        } 
+        }
+        showText.text = "The array is sorted";
+        showText.color = Color.green;
     }
 
     protected void writeToIndex(ArrayIndex[] array, int index, int value){
@@ -194,8 +281,7 @@ public abstract class SortingAlgorithm1 : Algorithm
                 break;
             case 2:
                 array[element].o.GetComponent<Renderer>().material.color = Color.green;
-                //showText.text = "Index " + element + " is sorted";
-                //showText.color = Color.green;
+                Debug.Log("Index "+ element + " is sorted");
                 break;
             case 3:
                 array[element].o.GetComponent<Renderer>().material.color = Color.blue;
@@ -209,12 +295,26 @@ public abstract class SortingAlgorithm1 : Algorithm
     }
     
     // This method enqueues an instance where two values were compared
-    public bool compare(int x, int y, short code, short arrayCode)
+    // arrayId refers to the array that comparisons are being made in (refer to the QueueCommand for details)
+    public bool compare(int x, int y, short arrayId)
     {
-        q.Enqueue(new short[] {3, (short)x, (short)y, arrayCode});
-        q.Enqueue(new short[] {code, (short)x, (short)y, arrayCode});
+        queue.Enqueue(new QueueCommand(4, x, y, arrayId));
+
+        queue.Enqueue(new QueueCommand(1, x, y, arrayId, 1));
+        queue.Enqueue(new QueueCommand());
+
 
         return true;
+    }
+
+    // This method enqueues an instance to undo any changes caused by compare
+    // arrayId refers to the array that comparisons are being made in (refer to the QueueCommand for details)
+    // colorId refers to th color the indices should be changed to after comparison.
+    public void decompare(int x, int y, short arrayId, short colorId){
+        queue.Enqueue(new QueueCommand(5, x, y, 0));
+        queue.Enqueue(new QueueCommand());
+        queue.Enqueue(new QueueCommand (1, x, y, arrayId, colorId));
+
     }
 
     public void setCam()//C.O Change camera set
