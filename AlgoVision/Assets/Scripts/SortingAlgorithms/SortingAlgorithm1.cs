@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 public abstract class SortingAlgorithm1 : Algorithm
 {
     protected ArrayIndex[] array;
@@ -12,8 +12,8 @@ public abstract class SortingAlgorithm1 : Algorithm
     public int[] arr;
     protected Queue<QueueCommand> queue = new Queue<QueueCommand>();
     private GameObject canvas;
-    private Text showText;
-
+    private TMP_Text showText;
+    private Color green;
     // This is called in readQueue's default command.
     // The class that extends SortingAlgorithm has to define extra commands
     abstract public IEnumerator extendCommands(QueueCommand q);
@@ -36,9 +36,9 @@ public abstract class SortingAlgorithm1 : Algorithm
             this.value = value;
             o = GameObject.Instantiate(boxPrefab);// CREATE CUBES
             o.transform.position = new Vector3(index * 2, 3, 0);
-            var t = o.GetComponentInChildren<TextMesh>();
+            var t = o.GetComponentInChildren<TextMeshPro>();
             t.text = value.ToString();
-            t.transform.position = new Vector3(o.transform.position.x,o.transform.position.y,o.transform.position.z - 1);
+            //t.transform.position = new Vector3(o.transform.position.x,o.transform.position.y,o.transform.position.z - 1);
         }
         public ArrayIndex(){
 
@@ -135,7 +135,7 @@ public abstract class SortingAlgorithm1 : Algorithm
     protected void buildArray(GameObject boxPrefab, GameObject canvas){
         int i;
         this.canvas = canvas;
-        showText = canvas.transform.GetChild(4).GetComponent<Text>();
+        showText = canvas.transform.GetChild(5).GetComponent<TMP_Text>();
 
         for(i = 0; i < size; i++){
             arr[i] = i;
@@ -168,7 +168,7 @@ public abstract class SortingAlgorithm1 : Algorithm
         a.o.transform.position = new Vector3(b.o.transform.position.x, a.o.transform.position.y, 0);
         b.o.transform.position = new Vector3(position.x, b.o.transform.position.y, 0);
         //showText.text = "Swap!";
-       // showText.color = Color.blue;
+        //showText.color = Color.blue;
     }
     // swap two int indices
     protected void swap(int x, int y, short arrayCode)
@@ -207,19 +207,23 @@ public abstract class SortingAlgorithm1 : Algorithm
                         swap(ref array[q.index1], ref array[q.index2]);
                         Debug.Log("Swapping values at Index "+ q.index1 + " and "+ q.index2);
                         showText.text = q.message;
-                        showText.color = Color.blue;
+                        var blue = new Color(0.6f, 0.686f, 0.761f);
+                        showText.color = blue;
                         break;                        
                     case 3: // change the color of just a single index
                         colorChange(q.index1, q.colorId, array);
                         showText.text = q.message;
-                        showText.color = Color.green;
+                        green = new Color(0.533f, 0.671f, 0.459f);
+                        showText.color = green;
                         break;
                     case 4: // raise two indices up, used to visualize they are being compared
                         array[q.index1].o.transform.position = new Vector3(array[q.index1].o.transform.position.x, array[q.index1].o.transform.position.y + 1, 0);
                         array[q.index2].o.transform.position = new Vector3(array[q.index2].o.transform.position.x, array[q.index2].o.transform.position.y + 1, 0);
                         showText.enabled = true;
                         showText.text = q.message;
-                        showText.color = Color.red;
+                        // red color
+                        var red = new Color(1f, .2f, .361f, 1);
+                        showText.color = red;
                         break;
                     case 5: // raise two indices down, used to visualize they are being uncompared
                         array[q.index1].o.transform.position = new Vector3(array[q.index1].o.transform.position.x, array[q.index1].o.transform.position.y - 1, 0);
@@ -232,7 +236,8 @@ public abstract class SortingAlgorithm1 : Algorithm
                         break;
                     case 7: // update only the text field
                         showText.text = q.message;
-                        showText.color = Color.red;
+                        red = new Color(1f, .2f, .361f, 1);
+                        showText.color = red;
                      
                         break;
                  /*
@@ -301,7 +306,8 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
             }
         }
         showText.text = "The array is sorted";
-        showText.color = Color.green;
+        green = new Color(0.533f, 0.671f, 0.459f);
+        showText.color = green;
     }
 
     protected void writeToIndex(ArrayIndex[] array, int index, int value){
@@ -321,14 +327,17 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
                 array[element].o.GetComponent<Renderer>().material.color = Color.white;
                 break;
             case 1:
-                array[element].o.GetComponent<Renderer>().material.color = Color.red;
+                var red = new Color(1f, .2f, .361f, 1);
+                array[element].o.GetComponent<Renderer>().material.color = red;//Color.red;
                 break;
             case 2:
-                array[element].o.GetComponent<Renderer>().material.color = Color.green;
+                green = new Color(0.533f, 0.671f, 0.459f);
+                array[element].o.GetComponent<Renderer>().material.color = green;
                 Debug.Log("Index "+ element + " is sorted");
                 break;
             case 3:
-                array[element].o.GetComponent<Renderer>().material.color = Color.blue;
+                var blue = new Color(0.6f, 0.686f, 0.761f);
+                array[element].o.GetComponent<Renderer>().material.color = blue;
                 break;
             case 4: 
                 array[element].o.GetComponent<Renderer>().material.color = Color.black;

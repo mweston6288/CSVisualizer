@@ -10,12 +10,14 @@ public class BubbleSortUI : MonoBehaviour
     [SerializeField] BubbleSort v;
     [SerializeField] Slider speedSlider;
 
+    private Boolean isPlay;
     // Start is called before the first frame update
     void Start()
     {
         //v = gameObject.AddComponent(typeof(BubbleSort)) as BubbleSort;
         v.setup(7);
         v.time = 1;
+        isPlay = false;
         StartCoroutine(v.readQueue());
     }
 
@@ -24,14 +26,22 @@ public class BubbleSortUI : MonoBehaviour
     {
         v.time = speedSlider.value;
     }
-
-    public void pause()
+    public void reset()
     {
-        Time.timeScale = 0;
+        Application.LoadLevel(Application.loadedLevel);
     }
-    public void play()
+    public void pauseAndPlay()
     {
-        Time.timeScale = 1;
+        if (isPlay)
+        {
+            Time.timeScale = 1;
+            isPlay = false;
+        }
+        else
+        {
+            Time.timeScale = 0;
+            isPlay = true;
+        }
     }
 }
 

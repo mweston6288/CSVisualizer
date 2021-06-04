@@ -23,7 +23,7 @@ public abstract class SortingAlgorithm : Algorithm
             // build an ArrayIndex item for the main array. This will have an initial height, value, and position
             this.value = value;
             o = GameObject.Instantiate(boxPrefab);// CREATE CUBES
-            o.transform.position = new Vector3(value * 2, 3, 0);
+          // o = o.transform.position = new Vector3(value * 2, 3, 0);
             
             //o.transform.localScale = new Vector3(1, value + 1, 1); 
         }

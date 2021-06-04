@@ -37,7 +37,6 @@ public class BubbleSort : SortingAlgorithm1
     override public IEnumerator extendCommands(QueueCommand q){
         throw new NotImplementedException();
     }
-    
     /*
     int i, j = 0;
     public BubbleSort2(): base(20)
