@@ -21,11 +21,14 @@ public class BubbleSort : SortingAlgorithm1
             for(j = 0; j < size - i - 1; j++){
                 if (compare(j, j+1, 0) && arr[j] > arr[j+1]){
                     swap(j, j+1, 0);
-                    queue.Enqueue(new QueueCommand(2, j, j+1, 0));
+                    queue.Enqueue(new QueueCommand(2, j, j+1, 0, "swapped " + arr[j] + " and " + arr[j+1]));
+                }
+                else{
+                    queue.Enqueue(new QueueCommand(7, arr[j] + " and " + arr[j+1] + " unchanged"));
                 }
                 decompare(j, j+1, 0, 0);
             }
-            queue.Enqueue(new QueueCommand(3, j, (short)0, 2));
+            queue.Enqueue(new QueueCommand(3, j, (short)0, 2,  arr[j] + " sorted"));
             queue.Enqueue(new QueueCommand());
 
         }

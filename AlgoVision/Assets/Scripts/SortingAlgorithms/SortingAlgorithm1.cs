@@ -58,6 +58,7 @@ public abstract class SortingAlgorithm1 : Algorithm
        public short commandId;
        public int index1, index2;
        public short arrayId, colorId;
+       public string message;
 
         // Use this constructor when you just want the queue to pause for a moment
         public QueueCommand(){
@@ -89,9 +90,44 @@ public abstract class SortingAlgorithm1 : Algorithm
            this.arrayId = arrayId;
        }
        public QueueCommand(short commandId, short arrayId, short colorId){
+            this.commandId = commandId;
+            this.arrayId = arrayId;
+            this.colorId = colorId;
+       }
+        public QueueCommand(short commandId, int index1, int index2, short arrayId, short colorId, string message){
+           this.commandId = commandId;
+           this.index1 = index1;
+           this.index2 = index2;
+           this.arrayId = arrayId;
+           this.colorId = colorId;
+           this.message = message;
+       }
+       // Use this constructor when you need to color only one index
+       public QueueCommand(short commandId, int index1, short arrayId, short colorId, string message){
+           this.commandId = commandId;
+           this.index1 = index1;
+           this.arrayId = arrayId;
+           this.colorId = colorId;
+           this.message = message;
+       }       
+       // Use this construcotr when you need to do anything else with your two indices
+       public QueueCommand(short commandId, int index1, int index2, short arrayId, string message){
+           this.commandId = commandId;
+           this.index1 = index1;
+           this.index2 = index2;
+           this.arrayId = arrayId;
+           this.message = message;
+           this.message = message;
+       }
+       public QueueCommand(short commandId, short arrayId, short colorId, string message){
            this.commandId = commandId;
            this.arrayId = arrayId;
            this.colorId = colorId;
+           this.message = message;
+       }
+       public QueueCommand(short commandId, string message){
+           this.commandId = commandId;
+           this.message = message;
        }
    }
     // build the visible array and the array used for command building
@@ -131,8 +167,8 @@ public abstract class SortingAlgorithm1 : Algorithm
         position = a.o.transform.position;
         a.o.transform.position = new Vector3(b.o.transform.position.x, a.o.transform.position.y, 0);
         b.o.transform.position = new Vector3(position.x, b.o.transform.position.y, 0);
-        showText.text = "Swap!";
-        showText.color = Color.blue;
+        //showText.text = "Swap!";
+       // showText.color = Color.blue;
     }
     // swap two int indices
     protected void swap(int x, int y, short arrayCode)
@@ -170,17 +206,21 @@ public abstract class SortingAlgorithm1 : Algorithm
                     case 2: // swap the positions of two indices
                         swap(ref array[q.index1], ref array[q.index2]);
                         Debug.Log("Swapping values at Index "+ q.index1 + " and "+ q.index2);
-
+                        showText.text = q.message;
+                        showText.color = Color.blue;
                         break;                        
                     case 3: // change the color of just a single index
                         colorChange(q.index1, q.colorId, array);
+                        showText.text = q.message;
+                        showText.color = Color.green;
                         break;
                     case 4: // raise two indices up, used to visualize they are being compared
                         array[q.index1].o.transform.position = new Vector3(array[q.index1].o.transform.position.x, array[q.index1].o.transform.position.y + 1, 0);
                         array[q.index2].o.transform.position = new Vector3(array[q.index2].o.transform.position.x, array[q.index2].o.transform.position.y + 1, 0);
                         showText.enabled = true;
-                        showText.text = "Comparing " + array[q.index1].value + " to " + array[q.index2].value;
-                        showText.color = Color.red;                        break;
+                        showText.text = q.message;
+                        showText.color = Color.red;
+                        break;
                     case 5: // raise two indices down, used to visualize they are being uncompared
                         array[q.index1].o.transform.position = new Vector3(array[q.index1].o.transform.position.x, array[q.index1].o.transform.position.y - 1, 0);
                         array[q.index2].o.transform.position = new Vector3(array[q.index2].o.transform.position.x, array[q.index2].o.transform.position.y - 1, 0);
@@ -189,8 +229,12 @@ public abstract class SortingAlgorithm1 : Algorithm
                         for (int i = q.index1; i <= q.index2; i++){
                             colorChange(i, q.colorId, array);
                         }
-                        break;                        
-
+                        break;
+                    case 7: // update only the text field
+                        showText.text = q.message;
+                        showText.color = Color.red;
+                     
+                        break;
                  /*
                     case 0: // set the index of instr[1] from the array indicated by instr[3] to the value in instr[2]
                         writeToIndex(array, instr[1], instr[2]);
@@ -298,7 +342,7 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
     // arrayId refers to the array that comparisons are being made in (refer to the QueueCommand for details)
     public bool compare(int x, int y, short arrayId)
     {
-        queue.Enqueue(new QueueCommand(4, x, y, arrayId));
+        queue.Enqueue(new QueueCommand(4, x, y, arrayId, "Comparing " + arr[x] + " to " + arr[y]));
 
         queue.Enqueue(new QueueCommand(1, x, y, arrayId, 1));
         queue.Enqueue(new QueueCommand());
@@ -311,7 +355,7 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
     // arrayId refers to the array that comparisons are being made in (refer to the QueueCommand for details)
     // colorId refers to th color the indices should be changed to after comparison.
     public void decompare(int x, int y, short arrayId, short colorId){
-        queue.Enqueue(new QueueCommand(5, x, y, 0));
+        queue.Enqueue(new QueueCommand(5, x, y, 0, ""));
         queue.Enqueue(new QueueCommand());
         queue.Enqueue(new QueueCommand (1, x, y, arrayId, colorId));
 

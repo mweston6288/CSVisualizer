@@ -29,7 +29,7 @@ public class InsertionSort : SortingAlgorithm1
                 if(compare(j, j+1, 0) && arr[j] > arr[j+1])
                 {
                     swap(j + 1, j, 0);
-                    queue.Enqueue(new QueueCommand(2, j, j+1, 0));
+                    queue.Enqueue(new QueueCommand(2, j, j+1, 0, ""));
                 }
                 else
                 {
