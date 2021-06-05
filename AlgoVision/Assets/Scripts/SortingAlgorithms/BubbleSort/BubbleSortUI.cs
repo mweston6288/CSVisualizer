@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System;
 
 public class BubbleSortUI : MonoBehaviour
@@ -11,11 +12,26 @@ public class BubbleSortUI : MonoBehaviour
     [SerializeField] Slider speedSlider;
 
     private Boolean isPlay;
+    int startSize;
     // Start is called before the first frame update
     void Start()
     {
-        //v = gameObject.AddComponent(typeof(BubbleSort)) as BubbleSort;
-        v.setup(7);
+        speedSlider = FindObjectOfType<Slider>();
+        startSize = FindObjectOfType<TMP_Dropdown>().value;
+
+        if (startSize == 2)
+        {
+            v.setup(21);
+        }
+        else if (startSize == 1)
+        {
+            v.setup(13);
+        }
+        else
+        {
+            v.setup(7);
+        }
+ 
         v.time = 1;
         isPlay = false;
         StartCoroutine(v.readQueue());
@@ -26,10 +42,7 @@ public class BubbleSortUI : MonoBehaviour
     {
         v.time = speedSlider.value;
     }
-    public void reset()
-    {
-        Application.LoadLevel(Application.loadedLevel);
-    }
+
     public void pauseAndPlay()
     {
         if (isPlay)

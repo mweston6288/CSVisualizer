@@ -207,8 +207,8 @@ public abstract class SortingAlgorithm1 : Algorithm
                         swap(ref array[q.index1], ref array[q.index2]);
                         Debug.Log("Swapping values at Index "+ q.index1 + " and "+ q.index2);
                         showText.text = q.message;
-                        var blue = new Color(0.6f, 0.686f, 0.761f);
-                        showText.color = blue;
+                        var red = new Color(1f, .2f, .361f, 1);
+                        showText.color = red;
                         break;                        
                     case 3: // change the color of just a single index
                         colorChange(q.index1, q.colorId, array);
@@ -222,8 +222,8 @@ public abstract class SortingAlgorithm1 : Algorithm
                         showText.enabled = true;
                         showText.text = q.message;
                         // red color
-                        var red = new Color(1f, .2f, .361f, 1);
-                        showText.color = red;
+                        var blue = new Color(0.6f, 0.686f, 0.761f);
+                        showText.color = blue;
                         break;
                     case 5: // raise two indices down, used to visualize they are being uncompared
                         array[q.index1].o.transform.position = new Vector3(array[q.index1].o.transform.position.x, array[q.index1].o.transform.position.y - 1, 0);
@@ -236,9 +236,9 @@ public abstract class SortingAlgorithm1 : Algorithm
                         break;
                     case 7: // update only the text field
                         showText.text = q.message;
-                        red = new Color(1f, .2f, .361f, 1);
-                        showText.color = red;
-                     
+                        blue = new Color(0.6f, 0.686f, 0.761f);
+                        showText.color = blue;
+
                         break;
                  /*
                     case 0: // set the index of instr[1] from the array indicated by instr[3] to the value in instr[2]
