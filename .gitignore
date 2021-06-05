@@ -31,7 +31,6 @@
 *.out
 *.app
 
-/AlgoVision/Library
 /AlgoVision/Logs
 /AlgoVision/Packages
 /AlgoVision/ProjectSettings/ProjectVersion.txt
