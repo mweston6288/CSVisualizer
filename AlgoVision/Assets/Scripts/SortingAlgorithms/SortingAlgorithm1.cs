@@ -206,7 +206,11 @@ public abstract class SortingAlgorithm1 : Algorithm
     public IEnumerator readQueue()
     {
         Debug.Log("Total runtime: " + stopTime);
-        foreach(QueueCommand q in queue){
+        int totalCommands = queue.Count;
+        QueueCommand q;
+        while (queue.Count > 0){
+            q = queue.Dequeue();
+            completionPercent = 1 - (float)queue.Count / totalCommands;
             currentTime = q.time;
             // Debug.Log(q.commandId);
 
@@ -330,8 +334,8 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
                         */
                 }
             }
-            Debug.Log("Current runtime: " + currentTime);
-            Debug.Log("Completion percent: " + ((double)currentTime / stopTime));
+            Debug.Log("Actual runtime: " + currentTime + " milliseconds");
+            Debug.Log("Completion percent: " + completionPercent);
             Debug.Log("swaps: " + swaps);
             Debug.Log("Comparisons: " + comparisons);
 
