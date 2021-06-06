@@ -10,10 +10,12 @@ public abstract class SortingAlgorithm1 : Algorithm
     protected ArrayIndex[] array;
     public int size;
     public int[] arr;
+    public int comparisons, swaps;
     protected Queue<QueueCommand> queue = new Queue<QueueCommand>();
     private GameObject canvas;
     private TMP_Text showText;
     private Color green;
+
     // This is called in readQueue's default command.
     // The class that extends SortingAlgorithm has to define extra commands
     abstract public IEnumerator extendCommands(QueueCommand q);
@@ -59,11 +61,13 @@ public abstract class SortingAlgorithm1 : Algorithm
        public int index1, index2;
        public short arrayId, colorId;
        public string message;
+       public long time;
 
         // Use this constructor when you just want the queue to pause for a moment
         public QueueCommand(){
            commandId = 0;
            arrayId = 0;
+           time = timer.ElapsedMilliseconds;
         }
         // Use this constructor when you need to color multiple indices
         // Depending on the command, it will color only array[index1] and array[index2]
@@ -74,6 +78,7 @@ public abstract class SortingAlgorithm1 : Algorithm
            this.index2 = index2;
            this.arrayId = arrayId;
            this.colorId = colorId;
+           time = timer.ElapsedMilliseconds;
        }
        // Use this constructor when you need to color only one index
        public QueueCommand(short commandId, int index1, short arrayId, short colorId){
@@ -81,6 +86,7 @@ public abstract class SortingAlgorithm1 : Algorithm
            this.index1 = index1;
            this.arrayId = arrayId;
            this.colorId = colorId;
+           time = timer.ElapsedMilliseconds;
        }       
        // Use this construcotr when you need to do anything else with your two indices
        public QueueCommand(short commandId, int index1, int index2, short arrayId){
@@ -88,11 +94,13 @@ public abstract class SortingAlgorithm1 : Algorithm
            this.index1 = index1;
            this.index2 = index2;
            this.arrayId = arrayId;
+           time = timer.ElapsedMilliseconds;
        }
        public QueueCommand(short commandId, short arrayId, short colorId){
             this.commandId = commandId;
             this.arrayId = arrayId;
             this.colorId = colorId;
+           time = timer.ElapsedMilliseconds;
        }
         public QueueCommand(short commandId, int index1, int index2, short arrayId, short colorId, string message){
            this.commandId = commandId;
@@ -101,6 +109,7 @@ public abstract class SortingAlgorithm1 : Algorithm
            this.arrayId = arrayId;
            this.colorId = colorId;
            this.message = message;
+           time = timer.ElapsedMilliseconds;
        }
        // Use this constructor when you need to color only one index
        public QueueCommand(short commandId, int index1, short arrayId, short colorId, string message){
@@ -109,6 +118,7 @@ public abstract class SortingAlgorithm1 : Algorithm
            this.arrayId = arrayId;
            this.colorId = colorId;
            this.message = message;
+           time = timer.ElapsedMilliseconds;
        }       
        // Use this construcotr when you need to do anything else with your two indices
        public QueueCommand(short commandId, int index1, int index2, short arrayId, string message){
@@ -118,16 +128,19 @@ public abstract class SortingAlgorithm1 : Algorithm
            this.arrayId = arrayId;
            this.message = message;
            this.message = message;
+           time = timer.ElapsedMilliseconds;
        }
        public QueueCommand(short commandId, short arrayId, short colorId, string message){
            this.commandId = commandId;
            this.arrayId = arrayId;
            this.colorId = colorId;
            this.message = message;
+           time = timer.ElapsedMilliseconds;
        }
        public QueueCommand(short commandId, string message){
            this.commandId = commandId;
            this.message = message;
+           time = timer.ElapsedMilliseconds;
        }
    }
     // build the visible array and the array used for command building
@@ -151,7 +164,7 @@ public abstract class SortingAlgorithm1 : Algorithm
         int i;
         Random r = new Random();
         for (i = 0; i < size; i++){
-            swap(i, r.Next(i, size), 0);
+            internalSwap(i, r.Next(i, size));
         }
     }
 
@@ -170,11 +183,20 @@ public abstract class SortingAlgorithm1 : Algorithm
         //showText.text = "Swap!";
         //showText.color = Color.blue;
     }
+
+    // This swap command is meant to be used by shuffle() when setting up the array
+    // It does not queue anything.
+    void internalSwap(int x, int y){
+        int temp = arr[x];
+        arr[x] = arr[y];
+        arr[y] = temp;        
+    }
     // swap two int indices
-    protected void swap(int x, int y, short arrayCode)
+    // Also queue in a cwap command
+    // Intended to be used by sort()
+    protected void swap(int x, int y)
     {
-        // Put the below line after any swap. Replace x,y, and arrayCode with the values passed to swap
-        //q.Enqueue(new short[] {1, (short)x, (short)y, arrayCode});
+        queue.Enqueue(new QueueCommand(2, x, y, 0, "Swapped " + arr[x] + " and " + arr[y]));
         int temp = arr[x];
         arr[x] = arr[y];
         arr[y] = temp;
@@ -183,8 +205,10 @@ public abstract class SortingAlgorithm1 : Algorithm
     // Go through the queue
     public IEnumerator readQueue()
     {
+        Debug.Log("Total runtime: " + stopTime);
         foreach(QueueCommand q in queue){
-            Debug.Log(q.commandId);
+            currentTime = q.time;
+            // Debug.Log(q.commandId);
 
             // Since some of these methods have an auxArray version,
             // we'll jump over to that whenever we want to do something with auxArray
@@ -201,11 +225,12 @@ public abstract class SortingAlgorithm1 : Algorithm
                     case 1: // change the color of two indices
                         colorChange(q.index1, q.colorId, array);
                         colorChange(q.index2, q.colorId, array);
-                        Debug.Log("Comparing values at Index "+ q.index1 + " and "+ q.index2);
+                        // Debug.Log("Comparing values at Index "+ q.index1 + " and "+ q.index2);
                         break;
                     case 2: // swap the positions of two indices
                         swap(ref array[q.index1], ref array[q.index2]);
-                        Debug.Log("Swapping values at Index "+ q.index1 + " and "+ q.index2);
+                        swaps++;
+                        // Debug.Log("Swapping values at Index "+ q.index1 + " and "+ q.index2);
                         showText.text = q.message;
                         var red = new Color(1f, .2f, .361f, 1);
                         showText.color = red;
@@ -221,6 +246,7 @@ public abstract class SortingAlgorithm1 : Algorithm
                         array[q.index2].o.transform.position = new Vector3(array[q.index2].o.transform.position.x, array[q.index2].o.transform.position.y + 1, 0);
                         showText.enabled = true;
                         showText.text = q.message;
+                        comparisons++;
                         // red color
                         var blue = new Color(0.6f, 0.686f, 0.761f);
                         showText.color = blue;
@@ -243,13 +269,13 @@ public abstract class SortingAlgorithm1 : Algorithm
                  /*
                     case 0: // set the index of instr[1] from the array indicated by instr[3] to the value in instr[2]
                         writeToIndex(array, instr[1], instr[2]);
-                        Debug.Log("Index "+ instr[1] + " set to "+ instr[2]);
+                        // Debug.Log("Index "+ instr[1] + " set to "+ instr[2]);
                         yield return new WaitForSeconds(time);
                 
                         break;
                     case 1: // swap index instr[1] and instr[2] in array instr[3]
                         swap(ref array[(int)instr[1]], ref array[(int)instr[2]]);
-                        Debug.Log("Swapping values at Index "+ instr[1] + " and "+ instr[2]);
+                        // Debug.Log("Swapping values at Index "+ instr[1] + " and "+ instr[2]);
 
                         yield return new WaitForSeconds(time);
                         break;
@@ -261,7 +287,7 @@ public abstract class SortingAlgorithm1 : Algorithm
                         colorChange(instr[2], 1, array);
                         array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.position.x, array[instr[1]].o.transform.position.y + 1, 0);
                         array[instr[2]].o.transform.position = new Vector3(array[instr[2]].o.transform.position.x, array[instr[2]].o.transform.position.y + 1, 0);
-                        Debug.Log("Comparing values at Index "+ instr[1] + " and "+ instr[2]);
+                        // Debug.Log("Comparing values at Index "+ instr[1] + " and "+ instr[2]);
 
                         yield return new WaitForSeconds(time);
                         break;
@@ -290,7 +316,7 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
                         }
                         break;
                     case 8: // Make all elements green, indicating the sort is complete
-                        Debug.Log("The array is sorted");
+                        // Debug.Log("The array is sorted");
                         for (int i = 0; i < size; i++){
                             colorChange(i, 2, array);
                             yield return new WaitForSeconds(time);
@@ -304,6 +330,11 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
                         */
                 }
             }
+            Debug.Log("Current runtime: " + currentTime);
+            Debug.Log("Completion percent: " + ((double)currentTime / stopTime));
+            Debug.Log("swaps: " + swaps);
+            Debug.Log("Comparisons: " + comparisons);
+
         }
         showText.text = "The array is sorted";
         green = new Color(0.533f, 0.671f, 0.459f);
@@ -333,7 +364,7 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
             case 2:
                 green = new Color(0.533f, 0.671f, 0.459f);
                 array[element].o.GetComponent<Renderer>().material.color = green;
-                Debug.Log("Index "+ element + " is sorted");
+                // Debug.Log("Index "+ element + " is sorted");
                 break;
             case 3:
                 var blue = new Color(0.6f, 0.686f, 0.761f);
@@ -366,7 +397,7 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
     public void decompare(int x, int y, short arrayId, short colorId){
         queue.Enqueue(new QueueCommand(5, x, y, 0, ""));
         queue.Enqueue(new QueueCommand());
-        queue.Enqueue(new QueueCommand (1, x, y, arrayId, colorId));
+        queue.Enqueue(new QueueCommand(1, x, y, arrayId, colorId));
 
     }
 

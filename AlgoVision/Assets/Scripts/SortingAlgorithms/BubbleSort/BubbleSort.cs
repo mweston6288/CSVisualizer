@@ -20,29 +20,32 @@ public class BubbleSort : SortingAlgorithm1
         this.size = size;
         arr = new int[size];
         array = new ArrayIndex[size];
+        comparisons = swaps = 0;
         sort();
         setCam();
     }
 
     void sort(){
         buildArray(boxPrefab, canvas);
+
+        timer.Restart();
         int i,j;
         for (i = 0; i < size; i++){
             for(j = 0; j < size - i - 1; j++){
                 if (compare(j, j+1, 0) && arr[j] > arr[j+1]){
-                    swap(j, j+1, 0);
-                    queue.Enqueue(new QueueCommand(2, j, j+1, 0, "Swapped " + arr[j] + " and " + arr[j+1]));
+                    swap(j, j+1);
                 }
                 else{
                     queue.Enqueue(new QueueCommand(7, arr[j] + " and " + arr[j+1] + " unchanged"));
                 }
+                Debug.Log("Elapsed time: "+ timer.ElapsedMilliseconds);
                 decompare(j, j+1, 0, 0);
             }
             queue.Enqueue(new QueueCommand(3, j, (short)0, 2,  arr[j] + " sorted"));
             queue.Enqueue(new QueueCommand());
-
         }
-
+        timer.Stop();
+        stopTime = timer.ElapsedMilliseconds;
     }
 
     public void pauseAndPlay()
