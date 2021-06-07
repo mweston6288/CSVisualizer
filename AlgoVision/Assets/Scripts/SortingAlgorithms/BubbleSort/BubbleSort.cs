@@ -16,20 +16,12 @@ public class BubbleSort : SortingAlgorithm1
         canvas = GameObject.Find("Canvas");
     }
     
-    public void setup(int size){
-        this.size = size;
-        arr = new int[size];
-        array = new ArrayIndex[size];
-        comparisons = swaps = 0;
-        sort();
-        setCam();
-    }
 
-    void sort(){
+    override public void sort(){
         buildArray(boxPrefab, canvas);
 
         timer.Restart();
-        
+
         int i,j;
         for (i = 0; i < size; i++){
             for(j = 0; j < size - i - 1; j++){

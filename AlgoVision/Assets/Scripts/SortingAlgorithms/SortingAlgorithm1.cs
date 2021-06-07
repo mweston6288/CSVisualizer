@@ -19,7 +19,7 @@ public abstract class SortingAlgorithm1 : Algorithm
     // This is called in readQueue's default command.
     // The class that extends SortingAlgorithm has to define extra commands
     abstract public IEnumerator extendCommands(QueueCommand q);
-
+    abstract public void sort();
     protected class ArrayIndex{
         public GameObject o;
         public int value;
@@ -143,6 +143,15 @@ public abstract class SortingAlgorithm1 : Algorithm
            time = timer.ElapsedMilliseconds;
        }
    }
+
+    public void setup(int size){
+        this.size = size;
+        arr = new int[size];
+        array = new ArrayIndex[size];
+        comparisons = swaps = 0;
+        sort();
+        setCam();
+    }
     // build the visible array and the array used for command building
     // They will be in sorted order and then shuffled
     protected void buildArray(GameObject boxPrefab, GameObject canvas){
