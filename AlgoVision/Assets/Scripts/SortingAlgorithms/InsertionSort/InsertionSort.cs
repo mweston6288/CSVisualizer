@@ -28,12 +28,17 @@ public class InsertionSort : SortingAlgorithm1
                 }
                 else
                 {
-                    decompare(j, j+1, 0, 0);
+                    queue.Enqueue(new QueueCommand(7, arr[j] + " and " + arr[j+1] + " unchanged"));
+                    decompare(j, j+1, 0, 2);
+
                     break;
                 }
-                decompare(j, j+1, 0, 0);
+                decompare(j, j+1, 0, 2);
 
             }
+            queue.Enqueue(new QueueCommand(7, "Indices 0 through " + i + " are in sorted order"));
+            queue.Enqueue(new QueueCommand());
+
         }
         queue.Enqueue(new QueueCommand(6, 0, size - 1, 0, 2));
 
