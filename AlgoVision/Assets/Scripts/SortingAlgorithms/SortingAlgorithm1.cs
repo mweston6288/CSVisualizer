@@ -140,6 +140,7 @@ public abstract class SortingAlgorithm1 : Algorithm
        public QueueCommand(short commandId, string message){
            this.commandId = commandId;
            this.message = message;
+           //this.colorId = colorId;
            time = timer.ElapsedMilliseconds;
        }
    }
@@ -189,6 +190,7 @@ public abstract class SortingAlgorithm1 : Algorithm
         position = a.o.transform.position;
         a.o.transform.position = new Vector3(b.o.transform.position.x, a.o.transform.position.y, 0);
         b.o.transform.position = new Vector3(position.x, b.o.transform.position.y, 0);
+
         //showText.text = "Swap!";
         //showText.color = Color.blue;
     }
@@ -393,7 +395,9 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
             case 6: 
                 array[element].o.GetComponent<Renderer>().material.color = Color.blue;
                 break;
-                        
+            case 7:
+                array[element].o.GetComponent<Renderer>().material.color = Color.green;
+                break;
             default:
                 break;
         }
