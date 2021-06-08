@@ -221,7 +221,7 @@ public abstract class SortingAlgorithm1 : Algorithm
             q = queue.Dequeue();
             completionPercent = 1 - (float)queue.Count / totalCommands;
             currentTime = q.time;
-            // Debug.Log(q.commandId);
+           // Debug.Log(q.commandId);
 
             // Since some of these methods have an auxArray version,
             // we'll jump over to that whenever we want to do something with auxArray
@@ -343,10 +343,10 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
                         */
                 }
             }
-            Debug.Log("Actual runtime: " + currentTime + " milliseconds");
-            Debug.Log("Completion percent: " + completionPercent);
-            Debug.Log("swaps: " + swaps);
-            Debug.Log("Comparisons: " + comparisons);
+           // Debug.Log("Actual runtime: " + currentTime + " milliseconds");
+//            Debug.Log("Completion percent: " + completionPercent);
+  //          Debug.Log("swaps: " + swaps);
+    //        Debug.Log("Comparisons: " + comparisons);
 
         }
         showText.text = "The array is sorted";
@@ -366,6 +366,7 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
         primary[primaryIndex].o.transform.localScale = new Vector3(1, primary[primaryIndex].value +1, 1);
     }
     protected void colorChange(int element, int colorCode, ArrayIndex[] array){
+        Debug.Log(element);
         switch (colorCode){
             case 0:
                 array[element].o.GetComponent<Renderer>().material.color = Color.white;
@@ -386,6 +387,13 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
             case 4: 
                 array[element].o.GetComponent<Renderer>().material.color = Color.black;
                 break;
+            case 5: 
+                array[element].o.GetComponent<Renderer>().material.color = Color.yellow;
+                break;
+            case 6: 
+                array[element].o.GetComponent<Renderer>().material.color = Color.blue;
+                break;
+                        
             default:
                 break;
         }
@@ -395,6 +403,7 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
     // arrayId refers to the array that comparisons are being made in (refer to the QueueCommand for details)
     public bool compare(int x, int y, short arrayId)
     {
+        Debug.Log(x + " "+ y);
         queue.Enqueue(new QueueCommand(4, x, y, arrayId, "Comparing " + arr[x] + " to " + arr[y]));
 
         queue.Enqueue(new QueueCommand(1, x, y, arrayId, 1));
@@ -413,6 +422,15 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
         queue.Enqueue(new QueueCommand(1, x, y, arrayId, colorId));
 
     }
+    public void decompare(int x, int y, short arrayId, short colorId1, short colorId2){
+        Debug.Log(x + " "+ y);
+        queue.Enqueue(new QueueCommand(5, x, y, 0, ""));
+        queue.Enqueue(new QueueCommand(3, x, arrayId, colorId1));
+        queue.Enqueue(new QueueCommand(3, y, arrayId, colorId2));
+        queue.Enqueue(new QueueCommand());
+
+    }
+
 
     public void setCam()//C.O Change camera set
     {

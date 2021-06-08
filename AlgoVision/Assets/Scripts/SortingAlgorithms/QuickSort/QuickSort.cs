@@ -1,12 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
-using Random = System.Random;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System;
 
-public class QuickSort : SortingAlgorithm
+public class QuickSort : SortingAlgorithm1
 {
     [SerializeField] GameObject boxPrefab;
+    [SerializeField] GameObject canvas;
+
+    private Boolean isPlay;
+
+    void Start()
+    {
+        canvas = GameObject.Find("Canvas");
+    }
+
     public void setup(int size){
         this.size = size;
         arr = new int[size];
@@ -14,102 +24,120 @@ public class QuickSort : SortingAlgorithm
         sort();
         setCam();
     }
-    void sort(){
-        buildArray(boxPrefab);
+    override public void sort(){
+        buildArray(boxPrefab, canvas);
+        timer.Restart();
         quickSort(0, size - 1);
+        timer.Stop();
+        stopTime = timer.ElapsedMilliseconds;
     }   
-    override public IEnumerator extendCommands(short[] command){
-        throw new NotImplementedException();
-    }
+
     void quickSort(int low, int high)
+    {
+        if (low < high)
         {
-            if (low < high)
+            queue.Enqueue(new QueueCommand(6, low, high, 0, 3));
+
+            int split = partition(low, high);
+            queue.Enqueue(new QueueCommand(6, low, high, 0, 0));
+            queue.Enqueue(new QueueCommand(3, split, (short)0, 2));
+
+            quickSort(low, split - 1);
+            quickSort(split + 1, high);
+        }
+        else
+        {
+            if( low > -1 && low < size)
             {
-                q.Enqueue(new short[] { 6, (short)low, (short)high, 0 });
-
-                int split = partition(low, high);
-                q.Enqueue(new short[] { 7, (short)low, (short)high, 0});
-                q.Enqueue(new short[] { 2, (short)split, 2, 0 });
-
-                quickSort(low, split - 1);
-                quickSort(split + 1, high);
+            queue.Enqueue(new QueueCommand(3, low, (short)0, 2));
+            queue.Enqueue(new QueueCommand());
             }
             else
             {
-                if( low > -1 && low < size)
-                {
-                    q.Enqueue(new short[] { 2, (short)low, 2, 0 });
-                }
-                else
-                {
-                    q.Enqueue(new short[] { 2, (short)high, 2, 0 });
-                }
+            queue.Enqueue(new QueueCommand(3, high, (short)0, 2));
+            queue.Enqueue(new QueueCommand());
             }
         }
+    }
 
-        int partition(int low, int high)
+    int partition(int low, int high)
+    {
+        // Basically means I got a one-element array
+        if (low >= high)
         {
-            int i, lowPosition, temp; 
-           
-            int[] m;
-        Random r = new Random();
-            if (low >= high)
-            {
-                return low;
-            }
+            return low;
+        }
 
-        m = new int[3];
-            m[0] = low;
-            m[1] = high;
-            m[2] = r.Next(low+1, high+1);
-            
-         if(arr[m[0]] > arr[m[1]])
+        int lowPosition = low++; 
+
+        
+        // color the pointers
+        queue.Enqueue(new QueueCommand(3, low, (short)0, 5));
+        queue.Enqueue(new QueueCommand(3, high, (short)0, 6));
+
+        while (low <= high)
         {
-            temp = m[0];
-            m[0] = m[1];
-            m[1] = temp;
+            while (low <= high && compare(low, lowPosition, 0) && arr[low] <= arr[lowPosition]){
+                decompare(low, lowPosition, 0, 5, 3); // lower indices
+                queue.Enqueue(new QueueCommand(3, low, (short)0, 3)); // uncolor current low
+                if (++low < size)
+                    queue.Enqueue(new QueueCommand(3, low, (short)0, 5)); // color new low
+
+            }
+            if (low <= high && arr[low] > arr[lowPosition])
+                decompare(low, lowPosition, 0, 5, 3);
+
+            while (high >= low && compare(high, lowPosition, 0)  && arr[high] > arr[lowPosition]){
+                decompare(high, lowPosition, 0, 6, 3);
+                queue.Enqueue(new QueueCommand(3, high, (short)0, 3));
+                high--;
+                queue.Enqueue(new QueueCommand(3, high, (short)0, 6));
+            }
+            if (high >= low && arr[high] <= arr[lowPosition])
+                decompare(high, lowPosition, 0, 6, 3);
+
+            if ( low < high)
+            {
+                swap(low, high);
+                queue.Enqueue(new QueueCommand());
+                queue.Enqueue(new QueueCommand(3, low, (short)0, 3));
+                low++;
+                queue.Enqueue(new QueueCommand(3, high, (short)0, 3));
+                high--;
+                queue.Enqueue(new QueueCommand(3, low, (short)0, 5));
+                queue.Enqueue(new QueueCommand(3, high, (short)0, 6));
+            }
         }
-         if(arr[m[1]] > arr[m[2]])
+        // Finally we swap the pivot with the point high was pointing to
+        swap(lowPosition, high);
+
+        return high;
+    }
+
+    public void pauseAndPlay()
+    {
+        if (isPlay)
         {
-            temp = m[1];
-            m[1] = m[2];
-            m[2] = temp;
-            if (arr[m[0]] > arr[m[1]])
-            {
-                temp = m[0];
-                m[0] = m[1];
-                m[1] = temp;
-            }
+            Time.timeScale = 1;
+            isPlay = false;
+            canvas.transform.GetChild(2).GetComponent<Image>().color = new Color(1f, 1f, 1f, 1);
         }
-
-        swap(low, m[1], 0);
-        q.Enqueue(new short[] {1, (short)low, (short)m[1], 0});
-            
-            
-        i = arr[low];
-        lowPosition = low;
-            low++;
-
-            while (low <= high)
-            {
-                while (low <= high && compare(low, lowPosition, 5, 0) && arr[low] <= arr[lowPosition])
-                    low++;
-
-                while (high >= low && compare(high, lowPosition, 5, 0)  && arr[high] > arr[lowPosition])
-                    high--;
-                if ( low < high)
-                {
-                    swap(low, high, 0);
-                    q.Enqueue(new short[] {1, (short)low, (short)high, 0});
-
-                }
-            }
-            // Finally we swap the pivot with the point high was pointing to
-            swap(lowPosition, high,0);
-            q.Enqueue(new short[] {1, (short)lowPosition, (short)high, 0});
-
-            return high;
+        else
+        {
+            Time.timeScale = 0;
+            isPlay = true;
+            canvas.transform.GetChild(2).GetComponent<Image>().color = new Color(0.573f, 1f, 0f, 1);
         }
+    }
+
+    public void restartScene()
+    {
+        SceneManager.LoadScene("QuickSortScene");
+    }
+
+    override public IEnumerator extendCommands(QueueCommand q){
+        throw new NotImplementedException();
+    }
 /* static int size = 100;
     int leftPointer, rightPointer, split;
     QuickSortPartition head;
