@@ -214,16 +214,25 @@ public abstract class SortingAlgorithm1 : Algorithm
     }
     
     // Go through the queue
-    public IEnumerator readQueue()
+    public IEnumerator readQueue(GameObject canvas)
     {
         Debug.Log("Total runtime: " + stopTime);
         int totalCommands = queue.Count;
         QueueCommand q;
         while (queue.Count > 0){
             q = queue.Dequeue();
+
+
+            //Time bar fuctionality
+            //Debug.LogError("Filling time bar with " + (1f / totalCommands));
+            canvas.transform.GetChild(10).GetComponent<Slider>().value += (float)(1f/totalCommands);
             completionPercent = 1 - (float)queue.Count / totalCommands;
+            canvas.transform.GetChild(10).GetChild(2).GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = "" + (int)(completionPercent*100) + "%";
             currentTime = q.time;
-           // Debug.Log(q.commandId);
+            canvas.transform.GetChild(11).GetComponent<TMP_Text>().text = "" + (int)(stopTime * completionPercent) + " ms";
+            canvas.transform.GetChild(12).GetChild(0).GetComponent<TMP_Text>().text = "Comparisons: " + comparisons;
+            canvas.transform.GetChild(12).GetChild(1).GetComponent<TMP_Text>().text = "Swaps: " + swaps;
+           
 
             // Since some of these methods have an auxArray version,
             // we'll jump over to that whenever we want to do something with auxArray
