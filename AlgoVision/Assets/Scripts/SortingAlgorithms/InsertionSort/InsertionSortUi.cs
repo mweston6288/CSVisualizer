@@ -2,20 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System;
 public class InsertionSortUi : MonoBehaviour
 {
     [SerializeField] InsertionSort v;
 
     [SerializeField] Slider speedSlider;
-
+    private Boolean isPlay;
+    int startSize;
     // Start is called before the first frame update
     void Start()
     {
+        speedSlider = FindObjectOfType<Slider>();
+        startSize = FindObjectOfType<TMP_Dropdown>().value;
 
-        //v = gameObject.AddComponent(typeof(InsertionSort)) as InsertionSort;
-        v.setup(7);
+        if (startSize == 2)
+        {
+            v.setup(21);
+        }
+        else if (startSize == 1)
+        {
+            v.setup(13);
+        }
+        else
+        {
+            v.setup(7);
+        }
+ 
         v.time = 1;
-
+        isPlay = false;
         StartCoroutine(v.readQueue());
     }
 
@@ -25,12 +41,17 @@ public class InsertionSortUi : MonoBehaviour
         v.time = speedSlider.value;
     }
 
-    public void pause()
+    public void pauseAndPlay()
     {
-        Time.timeScale = 0;
-    }
-    public void play()
-    {
-        Time.timeScale = 1;
+        if (isPlay)
+        {
+            Time.timeScale = 1;
+            isPlay = false;
+        }
+        else
+        {
+            Time.timeScale = 0;
+            isPlay = true;
+        }
     }
 }

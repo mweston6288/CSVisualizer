@@ -1,40 +1,70 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System;
 public class BubbleSort : SortingAlgorithm1
 {
     [SerializeField] GameObject boxPrefab;
     [SerializeField] GameObject canvas;
-    public void setup(int size){
-        this.size = size;
-        arr = new int[size];
-        array = new ArrayIndex[size];
-        sort();
-        setCam();
-    }
 
-    void sort(){
+    private Boolean isPlay;
+
+    void Start()
+    {
+        canvas = GameObject.Find("Canvas");
+    }
+    
+
+    override public void sort(){
         buildArray(boxPrefab, canvas);
+
+        timer.Restart();
+
         int i,j;
         for (i = 0; i < size; i++){
             for(j = 0; j < size - i - 1; j++){
                 if (compare(j, j+1, 0) && arr[j] > arr[j+1]){
-                    swap(j, j+1, 0);
-                    queue.Enqueue(new QueueCommand(2, j, j+1, 0));
+                    swap(j, j+1);
                 }
+                else{
+                    queue.Enqueue(new QueueCommand(7, arr[j] + " and " + arr[j+1] + " unchanged"));
+                }
+                Debug.Log("Elapsed time: "+ timer.ElapsedMilliseconds);
                 decompare(j, j+1, 0, 0);
             }
-            queue.Enqueue(new QueueCommand(3, j, (short)0, 2));
+            queue.Enqueue(new QueueCommand(3, j, (short)0, 2,  arr[j] + " sorted"));
             queue.Enqueue(new QueueCommand());
-
         }
-
+        timer.Stop();
+        stopTime = timer.ElapsedMilliseconds;
     }
+
+    public void pauseAndPlay()
+    {
+        if (isPlay)
+        {
+            Time.timeScale = 1;
+            isPlay = false;
+            canvas.transform.GetChild(2).GetComponent<Image>().color = new Color(1f, 1f, 1f, 1);
+        }
+        else
+        {
+            Time.timeScale = 0;
+            isPlay = true;
+            canvas.transform.GetChild(2).GetComponent<Image>().color = new Color(0.573f, 1f, 0f, 1);
+        }
+    }
+
+    public void restartScene()
+    {
+        SceneManager.LoadScene("CodyTest1");
+    }
+
     override public IEnumerator extendCommands(QueueCommand q){
         throw new NotImplementedException();
     }
-    
     /*
     int i, j = 0;
     public BubbleSort2(): base(20)
