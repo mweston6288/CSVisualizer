@@ -27,6 +27,7 @@ public class QuickSort : SortingAlgorithm1
     override public void sort(){
         buildArray(boxPrefab, canvas);
         timer.Restart();
+        queue.Enqueue(new QueueCommand());
         quickSort(0, size - 1);
         timer.Stop();
         stopTime = timer.ElapsedMilliseconds;
@@ -34,6 +35,7 @@ public class QuickSort : SortingAlgorithm1
 
     void quickSort(int low, int high)
     {
+
         if (low < high)
         {
             queue.Enqueue(new QueueCommand(6, low, high, 0, 3));
@@ -74,14 +76,18 @@ public class QuickSort : SortingAlgorithm1
         // color the pointers
         queue.Enqueue(new QueueCommand(3, low, (short)0, 5));
         queue.Enqueue(new QueueCommand(3, high, (short)0, 6));
+        queue.Enqueue(new QueueCommand());
 
         while (low <= high)
         {
             while (low <= high && compare(low, lowPosition, 0) && arr[low] <= arr[lowPosition]){
                 decompare(low, lowPosition, 0, 5, 3); // lower indices
                 queue.Enqueue(new QueueCommand(3, low, (short)0, 3)); // uncolor current low
-                if (++low < size)
+                if (++low < size){
                     queue.Enqueue(new QueueCommand(3, low, (short)0, 5)); // color new low
+                    queue.Enqueue(new QueueCommand());                    
+                }
+
 
             }
             if (low <= high && arr[low] > arr[lowPosition])
@@ -91,7 +97,9 @@ public class QuickSort : SortingAlgorithm1
                 decompare(high, lowPosition, 0, 6, 3);
                 queue.Enqueue(new QueueCommand(3, high, (short)0, 3));
                 high--;
+                queue.Enqueue(new QueueCommand(3, low, (short)0, 5)); // recolor low in case high was at the same index
                 queue.Enqueue(new QueueCommand(3, high, (short)0, 6));
+                queue.Enqueue(new QueueCommand());
             }
             if (high >= low && arr[high] <= arr[lowPosition])
                 decompare(high, lowPosition, 0, 6, 3);
