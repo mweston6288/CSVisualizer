@@ -32,7 +32,7 @@ public class QuickSortUI : MonoBehaviour
             v.setup(7);
         }
  
-        v.time = 1;
+        v.time = startSize;
         isPlay = false;
         StartCoroutine(v.readQueue());
     }

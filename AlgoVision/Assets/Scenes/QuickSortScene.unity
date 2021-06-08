@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4465785, g: 0.49641252, b: 0.574817, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1124,7 +1124,8 @@ MonoBehaviour:
   arr: 
   comparisons: 0
   swaps: 0
-  boxPrefab: {fileID: 8788828555649016041, guid: cd30f0a7dd2f5974a9635dbf189c975e, type: 3}
+  boxPrefab: {fileID: 8788828555649016041, guid: cd30f0a7dd2f5974a9635dbf189c975e,
+    type: 3}
   canvas: {fileID: 1271266868}
 --- !u!4 &438271660
 Transform:
@@ -2067,8 +2068,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BubbleSort, Assembly-CSharp
+      - m_Target: {fileID: 1271266874}
+        m_TargetAssemblyTypeName: QuickSort, Assembly-CSharp
         m_MethodName: pauseAndPlay
         m_Mode: 1
         m_Arguments:
@@ -2681,6 +2682,7 @@ GameObject:
   - component: {fileID: 1271266870}
   - component: {fileID: 1271266869}
   - component: {fileID: 1271266873}
+  - component: {fileID: 1271266874}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -2790,6 +2792,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ca8ee12d30faaa4896080661ca61cf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1271266874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1271266868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 178489e8554ca6af3938a16978ab9102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: 0
+  completionPercent: 0
+  stopTime: 0
+  currentTime: 0
+  size: 0
+  arr: 
+  comparisons: 0
+  swaps: 0
+  boxPrefab: {fileID: 0}
+  canvas: {fileID: 0}
 --- !u!1 &1443512921
 GameObject:
   m_ObjectHideFlags: 0
@@ -2874,8 +2898,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1443512926}
-        m_TargetAssemblyTypeName: Restart, Assembly-CSharp
+      - m_Target: {fileID: 1271266874}
+        m_TargetAssemblyTypeName: QuickSort, Assembly-CSharp
         m_MethodName: restartScene
         m_Mode: 1
         m_Arguments:
@@ -3280,6 +3304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   v: {fileID: 438271659}
+  speedSlider: {fileID: 0}
 --- !u!1 &1771526619
 GameObject:
   m_ObjectHideFlags: 0
@@ -3830,7 +3855,7 @@ MonoBehaviour:
   m_MinValue: 0.1
   m_MaxValue: 2
   m_WholeNumbers: 0
-  m_Value: 2
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
