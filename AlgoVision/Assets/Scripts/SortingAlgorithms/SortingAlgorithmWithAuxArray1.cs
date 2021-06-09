@@ -47,6 +47,45 @@ public abstract class SortingAlgorithmWithAuxArray1 : SortingAlgorithm1
     // It also holds the auxArray versions of other cases
     override public IEnumerator extendCommands(QueueCommand q){
         yield return new WaitForSeconds(time);
+        switch (q.commandId){
+            case 1: // change the color of two indices
+                colorChange(q.index1, q.colorId, auxArray);
+                colorChange(q.index2, q.colorId, auxArray);
+                // Debug.Log("Comparing values at Index "+ q.index1 + " and "+ q.index2);
+                break;            
+            case 3: // change the color of just a single index
+                colorChange(q.index1, q.colorId, auxArray);
+                showText.text = q.message;
+                green = new Color(0.533f, 0.671f, 0.459f);
+                showText.color = green;
+                break;
+            case 4: // raise two indices up, used to visualize they are being compared
+                auxArray[q.index1].o.transform.position = new Vector3(auxArray[q.index1].o.transform.position.x, auxArray[q.index1].o.transform.position.y + 1, 0);
+                auxArray[q.index2].o.transform.position = new Vector3(auxArray[q.index2].o.transform.position.x, auxArray[q.index2].o.transform.position.y + 1, 0);
+                showText.enabled = true;
+                showText.text = q.message;
+                comparisons++;
+                // red color
+                var blue = new Color(0.6f, 0.686f, 0.761f);
+                showText.color = blue;
+                break;
+            case 5: // raise two indices down, used to visualize they are being uncompared
+                auxArray[q.index1].o.transform.position = new Vector3(auxArray[q.index1].o.transform.position.x, auxArray[q.index1].o.transform.position.y - 1, 0);
+                auxArray[q.index2].o.transform.position = new Vector3(auxArray[q.index2].o.transform.position.x, auxArray[q.index2].o.transform.position.y - 1, 0);
+                break;
+            case 8: // copy array[q.index2] to auxArray[q.index1] and make auxArray[q.index1] visible
+                auxArray[q.index1].value = array[q.index2].value;
+                var t = auxArray[q.index1].o.GetComponentInChildren<TextMeshPro>();
+                t.text = auxArray[q.index1].value.ToString();
+                auxArray[q.index1].o.transform.localScale = new Vector3(.75f, .75f, .75f);
+                break;
+            case 9: // copy auxArray[q.index2] to array[q.index1]
+                array[q.index1].value = auxArray[q.index2].value;
+                t = array[q.index1].o.GetComponentInChildren<TextMeshPro>();
+                t.text = array[q.index1].value.ToString();
+                break;
+
+        }
         /*
         switch(instr[0]){
             case 0:

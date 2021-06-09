@@ -13,7 +13,7 @@ public abstract class SortingAlgorithm1 : Algorithm
     public int comparisons, swaps;
     protected Queue<QueueCommand> queue = new Queue<QueueCommand>();
     private GameObject canvas;
-    private TMP_Text showText;
+    protected TMP_Text showText;
     private Color green;
 
     // This is called in readQueue's default command.
@@ -277,7 +277,9 @@ public abstract class SortingAlgorithm1 : Algorithm
                         showText.text = q.message;
                         blue = new Color(0.6f, 0.686f, 0.761f);
                         showText.color = blue;
-
+                        break;
+                    default:
+                        yield return extendCommands(q);
                         break;
                  /*
                     case 0: // set the index of instr[1] from the array indicated by instr[3] to the value in instr[2]
@@ -359,12 +361,7 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
         array[index].o.transform.position = new Vector3(array[index].o.transform.position.x, (value+1)*.5f, 0);
         array[index].o.transform.localScale = new Vector3(1, value + 1, 1);
     }
-    // convert the ArrayList object at primary[primaryIndex] into secondary[secondaryIndex]
-    protected void copyArrayValue(ArrayIndex[] primary, ArrayIndex[] secondary, int primaryIndex, int secondaryIndex){
-        primary[primaryIndex].value = secondary[secondaryIndex].value;
-        primary[primaryIndex].o.transform.position = new Vector3(primary[primaryIndex].o.transform.position.x, (primary[primaryIndex].value +1)*.5f, 0);
-        primary[primaryIndex].o.transform.localScale = new Vector3(1, primary[primaryIndex].value +1, 1);
-    }
+
     protected void colorChange(int element, int colorCode, ArrayIndex[] array){
         Debug.Log(element);
         switch (colorCode){
