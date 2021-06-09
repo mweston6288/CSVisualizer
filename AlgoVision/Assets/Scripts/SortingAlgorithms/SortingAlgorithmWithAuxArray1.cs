@@ -1,0 +1,103 @@
+using System;
+using Random = System.Random;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+public abstract class SortingAlgorithmWithAuxArray1 : SortingAlgorithm1
+{
+    protected ArrayIndex[] auxArray;
+    public int[] auxArr;
+    public int[] countingArray; // for counting and radix sort
+
+    protected class AuxArrayIndex : ArrayIndex{
+        
+
+        // build an ArrayIndex item for the auxillary array. This will only have an initial position
+        public AuxArrayIndex(int index, int size, GameObject boxPrefab) : base(){
+            o = GameObject.Instantiate(boxPrefab);
+            if (index < size / 2){
+                o.transform.position = new Vector3(index, 1, 0);
+            }
+            else{
+                o.transform.position = new Vector3(index + size / 2, 1, 0);
+            }
+            o.transform.localScale = new Vector3(0,0,0);
+            //o.transform.localScale = new Vector3(.75f, .75f, .75f);
+            var t = o.GetComponentInChildren<TextMeshPro>();
+            t.transform.localScale = new Vector3(.75f, .75f, .75f);
+        }
+   }
+    // Build the visible auxillary array
+    protected void buildAuxArray(GameObject boxPrefab, GameObject canvas){
+        for (int i = 0; i < size; i++){
+            auxArray[i] = new AuxArrayIndex(i, size, boxPrefab);
+        }
+    }
+
+    public void setAuxCam()
+    {
+        float z = (float)((-1 * size) / (2 * Math.Tan(Math.PI / 6)));
+        Camera.main.transform.position = new Vector3(array[size / 2].o.transform.position.x, array[size / 2].o.transform.position.y, (float)(z*1.1) );
+        Camera.main.farClipPlane = (float)(-1.1*z + 200);
+    }
+
+    // This stores case 9, 10, and 11 since those are the only commands that explicitely interact with the aux array
+    // It also holds the auxArray versions of other cases
+    override public IEnumerator extendCommands(QueueCommand q){
+        yield return new WaitForSeconds(time);
+        /*
+        switch(instr[0]){
+            case 0:
+                writeToIndex(auxArray, instr[1], instr[2]);
+                yield return new WaitForSeconds(.01f*time);
+                break;
+            case 2:
+                colorChange(instr[1], instr[2], auxArray);
+                break;
+            case 3:
+                colorChange(instr[1], 1, auxArray);
+                colorChange(instr[2], 1, auxArray);
+                yield return new WaitForSeconds(.01f*time);
+                break;
+            case 4:
+                colorChange(instr[1], 0, auxArray);
+                colorChange(instr[2], 0, auxArray);
+                break;
+            case 5:
+                colorChange(instr[1], 3, auxArray);
+                colorChange(instr[2], 3, auxArray);
+                break;
+            case 9: // shrink all the ArrayIndex items in the aux array to 0 height, functionally deleting them
+                for (int i = 0; i < size; i++){
+                    auxArray[i].o.transform.localScale = new Vector3(0, 0, 0);
+                    auxArray[i].o.GetComponent<Renderer>().material.color = Color.white;
+                }
+                break;
+            case 10: // Convert (instr[3])[instr[1]] to the value in the other array at index inst[2]
+                if (instr[3] == 0){
+                    copyArrayValue(array, auxArray, instr[1], instr[2]);
+                }
+                else{
+                    copyArrayValue(auxArray, array, instr[1], instr[2]);
+                }
+                yield return new WaitForSeconds(.01f*time);
+                break;
+            case 11: // write all elements from the array indicated by instr[1] to instr[2]
+                if (instr[1] == 0){
+                    for (int i = 0; i < size; i++){
+                        writeToIndex(array,i, auxArray[i].value);                            
+                        yield return new WaitForSeconds(.01f*time);
+                    }
+                }
+                else{
+                    for (int i = 0; i < size; i++){
+                        writeToIndex(auxArray,i, array[i].value);
+                        yield return new WaitForSeconds(.01f*time);
+                    }
+                }
+                break;
+        }*/
+    }
+}

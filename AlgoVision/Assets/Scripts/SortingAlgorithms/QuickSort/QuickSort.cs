@@ -83,7 +83,7 @@ public class QuickSort : SortingAlgorithm1
             while (low <= high && compare(low, lowPosition, 0) && arr[low] <= arr[lowPosition]){
                 decompare(low, lowPosition, 0, 5, 3); // lower indices
                 queue.Enqueue(new QueueCommand(3, low, (short)0, 3)); // uncolor current low
-                if (++low < size){
+                if (++low <= high){
                     queue.Enqueue(new QueueCommand(3, low, (short)0, 5)); // color new low
                     queue.Enqueue(new QueueCommand());                    
                 }
