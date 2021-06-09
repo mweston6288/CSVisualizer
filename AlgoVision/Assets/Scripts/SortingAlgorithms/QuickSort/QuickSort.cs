@@ -41,7 +41,7 @@ public class QuickSort : SortingAlgorithm1
             queue.Enqueue(new QueueCommand(6, low, high, 0, 3));
 
             int split = partition(low, high);
-            queue.Enqueue(new QueueCommand(6, low, high, 0, 0));
+            queue.Enqueue(new QueueCommand(6, low, high, 0, 3));
             queue.Enqueue(new QueueCommand(3, split, (short)0, 2));
 
             quickSort(low, split - 1);
@@ -74,14 +74,23 @@ public class QuickSort : SortingAlgorithm1
 
         
         // color the pointers
+
         queue.Enqueue(new QueueCommand(3, low, (short)0, 5));
+        queue.Enqueue(new QueueCommand(7, "Index " + low + " is lower pointer.", 5));
+        queue.Enqueue(new QueueCommand());
+
         queue.Enqueue(new QueueCommand(3, high, (short)0, 6));
+        queue.Enqueue(new QueueCommand(7, "Index " + high + " is higher pointer.", 6));
+        queue.Enqueue(new QueueCommand());
+
+        queue.Enqueue(new QueueCommand(3, lowPosition, (short)0, 7));
+        queue.Enqueue(new QueueCommand(7, "Index " + lowPosition + " is pivot.", 7));
         queue.Enqueue(new QueueCommand());
 
         while (low <= high)
         {
             while (low <= high && compare(low, lowPosition, 0) && arr[low] <= arr[lowPosition]){
-                decompare(low, lowPosition, 0, 5, 3); // lower indices
+                decompare(low, lowPosition, 0, 5, 7); // lower indices
                 queue.Enqueue(new QueueCommand(3, low, (short)0, 3)); // uncolor current low
                 if (++low <= high){
                     queue.Enqueue(new QueueCommand(3, low, (short)0, 5)); // color new low
@@ -91,10 +100,10 @@ public class QuickSort : SortingAlgorithm1
 
             }
             if (low <= high && arr[low] > arr[lowPosition])
-                decompare(low, lowPosition, 0, 5, 3);
+                decompare(low, lowPosition, 0, 5, 7);
 
             while (high >= low && compare(high, lowPosition, 0)  && arr[high] > arr[lowPosition]){
-                decompare(high, lowPosition, 0, 6, 3);
+                decompare(high, lowPosition, 0, 6, 7);
                 queue.Enqueue(new QueueCommand(3, high, (short)0, 3));
                 high--;
                 queue.Enqueue(new QueueCommand(3, low, (short)0, 5)); // recolor low in case high was at the same index
@@ -102,11 +111,13 @@ public class QuickSort : SortingAlgorithm1
                 queue.Enqueue(new QueueCommand());
             }
             if (high >= low && arr[high] <= arr[lowPosition])
-                decompare(high, lowPosition, 0, 6, 3);
+                decompare(high, lowPosition, 0, 6, 7);
 
             if ( low < high)
             {
                 swap(low, high);
+                //queue.Enqueue(new QueueCommand(3, high, (short)0, 5));
+                //queue.Enqueue(new QueueCommand(3, low, (short)0, 6));
                 queue.Enqueue(new QueueCommand());
                 queue.Enqueue(new QueueCommand(3, low, (short)0, 3));
                 low++;
@@ -118,7 +129,9 @@ public class QuickSort : SortingAlgorithm1
         }
         // Finally we swap the pivot with the point high was pointing to
         swap(lowPosition, high);
-
+        //queue.Enqueue(new QueueCommand(3, high, (short)0, 5));
+        //queue.Enqueue(new QueueCommand(3, low, (short)0, 6));
+        queue.Enqueue(new QueueCommand());
         return high;
     }
 

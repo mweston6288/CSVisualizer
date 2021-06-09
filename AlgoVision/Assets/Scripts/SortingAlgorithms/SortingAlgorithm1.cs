@@ -59,7 +59,7 @@ public abstract class SortingAlgorithm1 : Algorithm
        
        public short commandId;
        public int index1, index2;
-       public short arrayId, colorId;
+       public short arrayId, colorId, textColorId;
        public string message;
        public long time;
 
@@ -137,9 +137,18 @@ public abstract class SortingAlgorithm1 : Algorithm
            this.message = message;
            time = timer.ElapsedMilliseconds;
        }
-       public QueueCommand(short commandId, string message){
+       public QueueCommand(short commandId, string message)
+       {
+           this.commandId = commandId;
+            this.textColorId = 3;
+           this.message = message;
+           time = timer.ElapsedMilliseconds;
+       }
+       public QueueCommand(short commandId, string message, short textColorId)
+        {
            this.commandId = commandId;
            this.message = message;
+           this.textColorId = textColorId;
            time = timer.ElapsedMilliseconds;
        }
    }
@@ -245,14 +254,12 @@ public abstract class SortingAlgorithm1 : Algorithm
                         swaps++;
                         // Debug.Log("Swapping values at Index "+ q.index1 + " and "+ q.index2);
                         showText.text = q.message;
-                        var red = new Color(1f, .2f, .361f, 1);
-                        showText.color = red;
+                        showText.color = colorChangeText(1);
                         break;                        
                     case 3: // change the color of just a single index
                         colorChange(q.index1, q.colorId, array);
                         showText.text = q.message;
-                        green = new Color(0.533f, 0.671f, 0.459f);
-                        showText.color = green;
+                        showText.color = colorChangeText(2);
                         break;
                     case 4: // raise two indices up, used to visualize they are being compared
                         array[q.index1].o.transform.position = new Vector3(array[q.index1].o.transform.position.x, array[q.index1].o.transform.position.y + 1, 0);
@@ -261,8 +268,8 @@ public abstract class SortingAlgorithm1 : Algorithm
                         showText.text = q.message;
                         comparisons++;
                         // red color
-                        var blue = new Color(0.6f, 0.686f, 0.761f);
-                        showText.color = blue;
+                        var red = new Color(1f, .2f, .361f, 1);
+                        showText.color = red;//colorChangeText(1);
                         break;
                     case 5: // raise two indices down, used to visualize they are being uncompared
                         array[q.index1].o.transform.position = new Vector3(array[q.index1].o.transform.position.x, array[q.index1].o.transform.position.y - 1, 0);
@@ -275,8 +282,7 @@ public abstract class SortingAlgorithm1 : Algorithm
                         break;
                     case 7: // update only the text field
                         showText.text = q.message;
-                        blue = new Color(0.6f, 0.686f, 0.761f);
-                        showText.color = blue;
+                        showText.color = colorChangeText(q.textColorId);
                         break;
                     default:
                         yield return extendCommands(q);
@@ -352,8 +358,7 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
 
         }
         showText.text = "The array is sorted";
-        green = new Color(0.533f, 0.671f, 0.459f);
-        showText.color = green;
+        showText.color = colorChangeText(2);
     }
 
     protected void writeToIndex(ArrayIndex[] array, int index, int value){
@@ -361,7 +366,43 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
         array[index].o.transform.position = new Vector3(array[index].o.transform.position.x, (value+1)*.5f, 0);
         array[index].o.transform.localScale = new Vector3(1, value + 1, 1);
     }
-
+    private Color colorChangeText(int colorCode)
+    {
+        switch (colorCode)
+        {
+            case 0:
+                return Color.white;
+                //text.color = Color.white;
+            case 1:
+                var red = new Color(1f, .2f, .361f, 1);
+                return red;
+                //text.color = red;//Color.red;
+            case 2:
+                green = new Color(0.533f, 0.671f, 0.459f);
+                return green;
+                //text.color = green;
+                // Debug.Log("InAdex "+ element + " is sorted");
+            case 3:
+                var blue = new Color(0.6f, 0.686f, 0.761f);
+                return blue;
+                //text.color = blue;
+            case 4:
+                return Color.black;
+                //text.color = Color.black;
+            case 5:
+                return Color.yellow;
+                //text.color = Color.yellow;
+            case 6:
+                return Color.blue;
+                //text.color = Color.blue;
+            case 7:
+                return Color.green;
+                //text.color = Color.green;
+            default:
+                blue = new Color(0.6f, 0.686f, 0.761f);
+                return blue;
+        }
+    }
     protected void colorChange(int element, int colorCode, ArrayIndex[] array){
         Debug.Log(element);
         switch (colorCode){
@@ -390,7 +431,9 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
             case 6: 
                 array[element].o.GetComponent<Renderer>().material.color = Color.blue;
                 break;
-                        
+            case 7:
+                array[element].o.GetComponent<Renderer>().material.color = Color.green;
+                break;
             default:
                 break;
         }
