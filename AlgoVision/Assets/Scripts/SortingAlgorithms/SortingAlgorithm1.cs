@@ -18,7 +18,7 @@ public abstract class SortingAlgorithm1 : Algorithm
 
     // This is called in readQueue's default command.
     // The class that extends SortingAlgorithm has to define extra commands
-    abstract public IEnumerator extendCommands(QueueCommand q);
+    abstract public void extendCommands(QueueCommand q);
     abstract public void sort();
     protected class ArrayIndex{
         public GameObject o;
@@ -235,7 +235,7 @@ public abstract class SortingAlgorithm1 : Algorithm
             // Since some of these methods have an auxArray version,
             // we'll jump over to that whenever we want to do something with auxArray
             if (q.arrayId != 0){
-                yield return extendCommands(q);
+                extendCommands(q);
             }
             else{
                 switch (q.commandId)
@@ -285,7 +285,7 @@ public abstract class SortingAlgorithm1 : Algorithm
                         showText.color = colorChangeText(q.textColorId);
                         break;
                     default:
-                        yield return extendCommands(q);
+                        extendCommands(q);
                         break;
                  /*
                     case 0: // set the index of instr[1] from the array indicated by instr[3] to the value in instr[2]

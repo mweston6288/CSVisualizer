@@ -45,8 +45,7 @@ public abstract class SortingAlgorithmWithAuxArray1 : SortingAlgorithm1
 
     // This stores case 9, 10, and 11 since those are the only commands that explicitely interact with the aux array
     // It also holds the auxArray versions of other cases
-    override public IEnumerator extendCommands(QueueCommand q){
-        yield return new WaitForSeconds(time);
+    override public void extendCommands(QueueCommand q){
         switch (q.commandId){
             case 1: // change the color of two indices
                 colorChange(q.index1, q.colorId, auxArray);
@@ -84,7 +83,11 @@ public abstract class SortingAlgorithmWithAuxArray1 : SortingAlgorithm1
                 t = array[q.index1].o.GetComponentInChildren<TextMeshPro>();
                 t.text = array[q.index1].value.ToString();
                 break;
-
+            case 10: // shrink all elements in auxArray to 0, effectively hiding them
+                for (int i = 0; i < size; i++){
+                    auxArray[i].o.transform.localScale = new Vector3(0, 0, 0);
+                }
+                break;
         }
         /*
         switch(instr[0]){

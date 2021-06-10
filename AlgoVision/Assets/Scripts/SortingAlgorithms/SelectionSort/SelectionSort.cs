@@ -72,10 +72,10 @@ public class SelectionSort : SortingAlgorithm1
 
     public void restartScene()
     {
-        SceneManager.LoadScene("QuickSortScene");
+        SceneManager.LoadScene("SelectionSortScene");
     }
 
-    override public IEnumerator extendCommands(QueueCommand q){
+    override public void extendCommands(QueueCommand q){
         throw new NotImplementedException();
     }
 }

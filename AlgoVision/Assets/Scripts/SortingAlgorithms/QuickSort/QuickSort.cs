@@ -156,7 +156,7 @@ public class QuickSort : SortingAlgorithm1
         SceneManager.LoadScene("QuickSortScene");
     }
 
-    override public IEnumerator extendCommands(QueueCommand q){
+    override public void extendCommands(QueueCommand q){
         throw new NotImplementedException();
     }
 /* static int size = 100;

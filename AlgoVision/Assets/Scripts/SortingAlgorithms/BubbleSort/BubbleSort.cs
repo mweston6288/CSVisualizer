@@ -62,7 +62,7 @@ public class BubbleSort : SortingAlgorithm1
         SceneManager.LoadScene("CodyTest1");
     }
 
-    override public IEnumerator extendCommands(QueueCommand q){
+    override public void extendCommands(QueueCommand q){
         throw new NotImplementedException();
     }
     /*

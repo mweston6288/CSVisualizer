@@ -116,7 +116,7 @@ public class MergeSort : SortingAlgorithmWithAuxArray1
             j++;
             k++;
         }
-      //  q.Enqueue(new short[]{9, 0, 0, 0});
+        queue.Enqueue(new QueueCommand(10, ""));
     }
 
     private void mergeSort(int low, int high){
