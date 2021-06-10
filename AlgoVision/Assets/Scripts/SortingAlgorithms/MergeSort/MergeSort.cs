@@ -78,6 +78,7 @@ public class MergeSort : SortingAlgorithmWithAuxArray1
                 arr[k] = auxArr[i];
                 queue.Enqueue(new QueueCommand(9, k, i, 1));
                 queue.Enqueue(new QueueCommand());
+                decompare(i, j, 1, 0);
       //          q.Enqueue(new short[] {2, (short)i, 4, 1});
 
                 i++;
@@ -87,6 +88,7 @@ public class MergeSort : SortingAlgorithmWithAuxArray1
                 arr[k] = auxArr[j];
                 queue.Enqueue(new QueueCommand(9, k, j, 1));
                 queue.Enqueue(new QueueCommand());
+                decompare(i, j, 1, 0);
         //        q.Enqueue(new short[] {10, (short)k, (short)j, 0});
           //      q.Enqueue(new short[] {2, (short)j, 4, 1});
                 j++;

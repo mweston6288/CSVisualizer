@@ -457,7 +457,7 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
     // arrayId refers to the array that comparisons are being made in (refer to the QueueCommand for details)
     // colorId refers to th color the indices should be changed to after comparison.
     public void decompare(int x, int y, short arrayId, short colorId){
-        queue.Enqueue(new QueueCommand(5, x, y, 0, ""));
+        queue.Enqueue(new QueueCommand(5, x, y, arrayId, ""));
         queue.Enqueue(new QueueCommand());
         queue.Enqueue(new QueueCommand(1, x, y, arrayId, colorId));
 
