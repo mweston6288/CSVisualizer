@@ -151,6 +151,13 @@ public abstract class SortingAlgorithm1 : Algorithm
            this.textColorId = textColorId;
            time = timer.ElapsedMilliseconds;
        }
+       // Use this one if you are doing something that affects a whole array in general
+       public QueueCommand(short commandId, short arrayId){
+           this.commandId = commandId;
+           this.arrayId = arrayId;
+            time = timer.ElapsedMilliseconds;
+
+       }
    }
 
     public void setup(int size){
@@ -351,10 +358,10 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
                         */
                 }
             }
-           // Debug.Log("Actual runtime: " + currentTime + " milliseconds");
-//            Debug.Log("Completion percent: " + completionPercent);
-  //          Debug.Log("swaps: " + swaps);
-    //        Debug.Log("Comparisons: " + comparisons);
+            Debug.Log("Actual runtime: " + currentTime + " milliseconds");
+            Debug.Log("Completion percent: " + completionPercent);
+            Debug.Log("swaps: " + swaps);
+            Debug.Log("Comparisons: " + comparisons);
 
         }
         showText.text = "The array is sorted";

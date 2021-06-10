@@ -37,8 +37,12 @@ public class MergeSort : SortingAlgorithmWithAuxArray1
         buildAuxArray(boxPrefab, canvas);
 
         midSplit = (size - 2)/ 2 + 1;
+        timer.Restart();
+
         mergeSort(0, size - 1);
         queue.Enqueue(new QueueCommand(6, 0, size - 1, 0, 2));
+        timer.Stop();
+        stopTime = timer.ElapsedMilliseconds;
     }   
 
     private void merge(int low, int middle, int high)
@@ -116,7 +120,7 @@ public class MergeSort : SortingAlgorithmWithAuxArray1
             j++;
             k++;
         }
-        queue.Enqueue(new QueueCommand(10, ""));
+        queue.Enqueue(new QueueCommand(10, 1));
     }
 
     private void mergeSort(int low, int high){
@@ -127,9 +131,10 @@ public class MergeSort : SortingAlgorithmWithAuxArray1
             mergeSort(low, med);
             mergeSort(med + 1, high);
 
-        //    q.Enqueue(new short[] { 6, (short)low, (short)high , 0});
+            queue.Enqueue(new QueueCommand(6, low, high, 0, 3));
+
             merge(low, med, high);
-          //  q.Enqueue(new short[] { 7, (short)low, (short)high,0 });
+            queue.Enqueue(new QueueCommand(6, low, high, 0, 0));
         }
 
     }

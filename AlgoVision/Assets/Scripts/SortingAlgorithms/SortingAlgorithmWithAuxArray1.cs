@@ -72,6 +72,11 @@ public abstract class SortingAlgorithmWithAuxArray1 : SortingAlgorithm1
                 auxArray[q.index1].o.transform.position = new Vector3(auxArray[q.index1].o.transform.position.x, auxArray[q.index1].o.transform.position.y - 1, 0);
                 auxArray[q.index2].o.transform.position = new Vector3(auxArray[q.index2].o.transform.position.x, auxArray[q.index2].o.transform.position.y - 1, 0);
                 break;
+            case 6: // change the color of every index from index1 to index2 inclusive
+                for (int i = q.index1; i <= q.index2; i++){
+                    colorChange(i, q.colorId, auxArray);
+                }
+                break;
             case 8: // copy array[q.index2] to auxArray[q.index1] and make auxArray[q.index1] visible
                 auxArray[q.index1].value = array[q.index2].value;
                 var t = auxArray[q.index1].o.GetComponentInChildren<TextMeshPro>();
