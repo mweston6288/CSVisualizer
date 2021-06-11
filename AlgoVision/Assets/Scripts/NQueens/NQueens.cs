@@ -14,8 +14,9 @@ public class NQueens : Algorithm
     GameObject[,] board;
     [SerializeField] GameObject boxPrefab;
     [SerializeField] GameObject canvas;
+    [SerializeField] GameObject text;
     protected TMP_Text showText;
-
+    private Boolean isPlay;
     // Start is called before the first frame update
     public void setup(int n)
     {
@@ -24,7 +25,7 @@ public class NQueens : Algorithm
         internalBoard = new int[n,n];
         solution = false;
         showText = canvas.transform.GetChild(5).GetComponent<TMP_Text>();
-
+        isPlay = false;
         int i,j;
         TextMeshPro t;
 
@@ -225,6 +226,21 @@ public class NQueens : Algorithm
             else{
                 board[i,j].GetComponent<Renderer>().material.color = Color.white;
             }                 
+        }
+    }
+    public void pauseAndPlay()
+    {
+        if (isPlay)
+        {
+            Time.timeScale = 1;
+            isPlay = false;
+            canvas.transform.GetChild(2).GetComponent<Image>().color = new Color(1f, 1f, 1f, 1);
+        }
+        else
+        {
+            Time.timeScale = 0;
+            isPlay = true;
+            canvas.transform.GetChild(2).GetComponent<Image>().color = new Color(0.573f, 1f, 0f, 1);
         }
     }
     // Update is called once per frame
