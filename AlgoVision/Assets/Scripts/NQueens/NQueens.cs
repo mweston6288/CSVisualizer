@@ -11,10 +11,13 @@ public class NQueens : Algorithm
     int n;
     bool solution;
     int [,] internalBoard; // tracks how many queens can move to each tile on the board
+    TextMeshPro[] labelText1;
+    TextMeshPro[] labelText2;
     GameObject[,] board;
     [SerializeField] GameObject boxPrefab;
     [SerializeField] GameObject canvas;
     [SerializeField] GameObject text;
+
     protected TMP_Text showText;
     private Boolean isPlay;
     // Start is called before the first frame update
@@ -23,6 +26,8 @@ public class NQueens : Algorithm
         this.n = n;
         board = new GameObject[n,n];
         internalBoard = new int[n,n];
+        labelText1 = new TextMeshPro[n];
+        labelText2 = new TextMeshPro[n];
         solution = false;
         showText = canvas.transform.GetChild(5).GetComponent<TMP_Text>();
         isPlay = false;
@@ -42,6 +47,16 @@ public class NQueens : Algorithm
                 board[i,j].transform.position = new Vector3(i * 1.28f, (n-j) * 1.28f, 0);
             }
         }
+        for(i = 0; i < n; i++){
+            labelText1[i] = GameObject.Instantiate(text).GetComponent<TextMeshPro>();
+            labelText2[i] = GameObject.Instantiate(text).GetComponent<TextMeshPro>();
+            
+            labelText1[i].text = ((char)('A'+i)).ToString();
+            labelText2[i].text = (i+1).ToString();
+
+            labelText1[i].transform.position = new Vector3(-1.28f, (n-i)*1.28f, 0);
+            labelText2[i].transform.position = new Vector3(i * 1.28f, 0, 0);
+        }
         setCam();
     }
     public void setCam()
@@ -52,7 +67,6 @@ public class NQueens : Algorithm
     public IEnumerator build(int column){
         yield return new WaitForSeconds(time);
         showText.text = "Test";
-        showText.color = Color.black;
         if (column == n) {
 			solution = true;
             yield break;
@@ -66,6 +80,8 @@ public class NQueens : Algorithm
             setColor(i, column);
             // a safe space
             if(internalBoard[i, column] == 0){
+                showText.text = "Placing a Queen on " + ((char)(column+'A')).ToString() + (i+1).ToString();
+
                 // increment the row and column
                 for (j = 0; j < n; j++){
                     internalBoard[i, j]++;
@@ -84,6 +100,8 @@ public class NQueens : Algorithm
                     else{
                         board[j,column].GetComponent<Renderer>().material.color = Color.red;
                     }
+                    board[i,j].GetComponentInChildren<TextMeshPro>().text = internalBoard[i,j].ToString();
+                    board[j,column].GetComponentInChildren<TextMeshPro>().text = internalBoard[j,column].ToString();
 
                 }
                 // top left diagonal
@@ -96,6 +114,7 @@ public class NQueens : Algorithm
                     else{
                         board[j,k].GetComponent<Renderer>().material.color = Color.red;
                     }
+                    board[j,k].GetComponentInChildren<TextMeshPro>().text = internalBoard[j,k].ToString();
 				}
 				// bottom left diagonal
 				for (j = i, k = column; j >= 0 && k < n; j--, k++) {
@@ -106,8 +125,10 @@ public class NQueens : Algorithm
                     }
                     else{
                         board[j,k].GetComponent<Renderer>().material.color = Color.red;
-                    }				}
-				// top right diagonal
+                    }
+                    board[j,k].GetComponentInChildren<TextMeshPro>().text = internalBoard[j,k].ToString();
+                }
+                // top right diagonal
 				for (j = i, k = column; j < n && k >= 0; j++, k--) {
 					internalBoard[j,k]++;
                     if((j + k) % 2 == 1 ){
@@ -117,6 +138,7 @@ public class NQueens : Algorithm
                     else{
                         board[j,k].GetComponent<Renderer>().material.color = Color.red;
                     }
+                    board[j,k].GetComponentInChildren<TextMeshPro>().text = internalBoard[j,k].ToString();
 				}
 				// bottom right diagonal
 				for (j = i, k = column; j < n && k < n; j++, k++) {
@@ -128,6 +150,7 @@ public class NQueens : Algorithm
                     else{
                         board[j,k].GetComponent<Renderer>().material.color = Color.red;
                     }
+                    board[j,k].GetComponentInChildren<TextMeshPro>().text = internalBoard[j,k].ToString();
 				}
 
                 board[i,column].GetComponent<Renderer>().material.color = Color.green;
@@ -146,6 +169,11 @@ public class NQueens : Algorithm
                         else{
                             board[i,j].GetComponent<Renderer>().material.color = Color.white;
                         }
+                        board[i,j].GetComponentInChildren<TextMeshPro>().text = "";
+                    }
+                    else{
+                        board[i,j].GetComponentInChildren<TextMeshPro>().text = internalBoard[i,j].ToString();
+
                     }
                     internalBoard[j, column]--;
                     if (internalBoard[j,column] == 0){
@@ -155,6 +183,10 @@ public class NQueens : Algorithm
                         else{
                             board[j,column].GetComponent<Renderer>().material.color = Color.white;
                         }
+                        board[j,column].GetComponentInChildren<TextMeshPro>().text = "";
+                    }
+                    else{
+                        board[j,column].GetComponentInChildren<TextMeshPro>().text = internalBoard[j,column].ToString();
                     }
                 }
                 // top left diagonal
@@ -167,6 +199,10 @@ public class NQueens : Algorithm
                         else{
                             board[j,k].GetComponent<Renderer>().material.color = Color.white;
                         }
+                        board[j,k].GetComponentInChildren<TextMeshPro>().text = "";
+                    }
+                    else{
+                        board[j,k].GetComponentInChildren<TextMeshPro>().text = internalBoard[j,k].ToString();
                     }
 				}
 				// bottom left diagonal
@@ -179,8 +215,11 @@ public class NQueens : Algorithm
                         else{
                             board[j,k].GetComponent<Renderer>().material.color = Color.white;
                         }
+                        board[j,k].GetComponentInChildren<TextMeshPro>().text = "";
                     }
-				}
+                    else{
+                        board[j,k].GetComponentInChildren<TextMeshPro>().text = internalBoard[j,k].ToString();
+                    }				}
 				// top right diagonal
 				for (j = i, k = column; j < n && k >= 0; j++, k--) {
 					internalBoard[j,k]--;
@@ -191,8 +230,11 @@ public class NQueens : Algorithm
                         else{
                             board[j,k].GetComponent<Renderer>().material.color = Color.white;
                         }
+                        board[j,k].GetComponentInChildren<TextMeshPro>().text = "";
                     }
-				}
+                    else{
+                        board[j,k].GetComponentInChildren<TextMeshPro>().text = internalBoard[j,k].ToString();
+                    }				}
 				// bottom right diagonal
 				for (j = i, k = column; j < n && k < n; j++, k++) {
 					internalBoard[j,k]--;
@@ -203,8 +245,11 @@ public class NQueens : Algorithm
                         else{
                             board[j,k].GetComponent<Renderer>().material.color = Color.white;
                         }
+                        board[j,k].GetComponentInChildren<TextMeshPro>().text = "";
                     }
-				}
+                    else{
+                        board[j,k].GetComponentInChildren<TextMeshPro>().text = internalBoard[j,k].ToString();
+                    }				}
             }
         }
     }
