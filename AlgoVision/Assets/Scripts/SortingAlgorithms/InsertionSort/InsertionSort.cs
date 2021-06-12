@@ -66,7 +66,7 @@ public class InsertionSort : SortingAlgorithm1
         SceneManager.LoadScene("InsertionSortScene");
     }
 
-    override public IEnumerator extendCommands(QueueCommand q){
+    override public void extendCommands(QueueCommand q){
         throw new NotImplementedException();
     }
 }
