@@ -774,7 +774,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 60, y: 0}
+  m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: 100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &305506256
@@ -1120,6 +1120,12 @@ MonoBehaviour:
   completionPercent: 0
   stopTime: 0
   currentTime: 0
+  green: {r: 0.533, g: 0.671, b: 0.459, a: 1}
+  blue: {r: 0.6, g: 0.686, b: 0.761, a: 1}
+  red: {r: 1, g: 0.2, b: 0.361, a: 1}
+  boxPrefab: {fileID: 8788828555649016041, guid: cd30f0a7dd2f5974a9635dbf189c975e, type: 3}
+  canvas: {fileID: 1271266868}
+  text: {fileID: 4364636054960887421, guid: 9b4232445e926581e995e77d0874bd3f, type: 3}
 --- !u!4 &438271660
 Transform:
   m_ObjectHideFlags: 0
@@ -3434,8 +3440,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   v: {fileID: 438271659}
   speedSlider: {fileID: 1888905653}
-  isPlay: 0
-  startSize: 0
 --- !u!4 &1674299134
 Transform:
   m_ObjectHideFlags: 0
