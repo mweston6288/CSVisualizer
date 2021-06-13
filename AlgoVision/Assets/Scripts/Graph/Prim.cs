@@ -4,13 +4,14 @@ using UnityEngine;
 using System;
 public class Prim : Graph
 {
-    GameObject boxPrefab;
+    GameObject spherePrefab;
+    GameObject edgeValue;
     int main;
     protected static List head;
     // Start is called before the first frame update
     protected class PrimVertex : Vertex{
         public bool visited;
-        public PrimVertex(int value, GameObject boxPrefab) : base(value, boxPrefab){
+        public PrimVertex(int value, GameObject spherePrefab) : base(value, spherePrefab){
 
         }
     }    
@@ -40,10 +41,10 @@ public class Prim : Graph
     {
         vertices = new PrimVertex[vertex];
         for(int i = 0; i < vertex; i++){
-            vertices[i] = new PrimVertex(i, boxPrefab);
+            vertices[i] = new PrimVertex(i, spherePrefab);
         }
         for(int i = 0; i < edge; i++){
-            edges[i] = new Edge(i, r.Next(1,21));
+            edges[i] = new Edge(i, r.Next(1,21), edgeValue);
         }
         //setCam();
         main = r.Next(vertex);
