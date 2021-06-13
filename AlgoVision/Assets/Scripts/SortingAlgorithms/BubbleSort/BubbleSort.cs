@@ -29,7 +29,7 @@ public class BubbleSort : SortingAlgorithm1
                     swap(j, j+1);
                 }
                 else{
-                    queue.Enqueue(new QueueCommand(7, arr[j] + " and " + arr[j+1] + " unchanged"));
+                    queue.Enqueue(new QueueCommand(7, arr[j] + " and " + arr[j+1] + " unchanged", 3));
                 }
                 Debug.Log("Elapsed time: "+ timer.ElapsedMilliseconds);
                 decompare(j, j+1, 0, 0);
