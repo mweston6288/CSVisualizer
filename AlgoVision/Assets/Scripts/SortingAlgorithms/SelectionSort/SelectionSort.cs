@@ -1,35 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System;
 
-public class SelectionSort : SortingAlgorithm1
+public class SelectionSort : SortingAlgorithm
 {
     [SerializeField] GameObject boxPrefab;
-    [SerializeField] public GameObject canvas;
 
-    private Boolean isPlay;
-
-    void Start()
-    {
-        canvas = GameObject.Find("Canvas");
-    }
-
-    public void setup(int size)
+    public void Setup(int size)
     {
         this.size = size;  // 70.2 63.8 -114.5
         arr = new int[size];
         array = new ArrayIndex[size];
-        sort();
+        Sort();
         setCam();
     }
     // Start is called before the first frame update
-    override public void sort()
+    void Sort()
     {
         int smallest;
-        buildArray(boxPrefab, canvas);
+        buildArray(boxPrefab);
 
         for(int i = 0; i < size-1; i++)
         {
@@ -37,45 +27,20 @@ public class SelectionSort : SortingAlgorithm1
 
             for(int j = i+1; j < size; j++)
             {
-                if(compare(j, smallest, 0) && arr[j] < arr[smallest])
+                if(compare(j, smallest, 4, 0) && arr[j] < arr[smallest])
                 {
-                    decompare(j, smallest, 0, 0);
                     smallest = j;
                 }
-                else{
-                    decompare(j, smallest, 0, 0);
- 
-                }
             }
-            swap(smallest, i);
-            queue.Enqueue(new QueueCommand(3, i, (short)0, 2));
+            swap(smallest, i, 0);
+            q.Enqueue(new short[] {1, (short)i, (short)smallest, 0});
+            q.Enqueue(new short[] { 2, (short)i, 2, 0 });
         }
-        queue.Enqueue(new QueueCommand(3, size - 1, (short)0, 2));
+        q.Enqueue(new short[] { 2, (short)(size-1), 2, 0 });
 
     }
 
-    public void pauseAndPlay()
-    {
-        if (isPlay)
-        {
-            Time.timeScale = 1;
-            isPlay = false;
-            canvas.transform.GetChild(2).GetComponent<Image>().color = new Color(1f, 1f, 1f, 1);
-        }
-        else
-        {
-            Time.timeScale = 0;
-            isPlay = true;
-            canvas.transform.GetChild(2).GetComponent<Image>().color = new Color(0.573f, 1f, 0f, 1);
-        }
-    }
-
-    public void restartScene()
-    {
-        SceneManager.LoadScene("SelectionSortScene");
-    }
-
-    override public void extendCommands(QueueCommand q){
+    override public IEnumerator extendCommands(short[] command){
         throw new NotImplementedException();
     }
 }
