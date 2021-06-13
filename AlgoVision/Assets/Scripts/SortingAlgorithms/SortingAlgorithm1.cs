@@ -286,8 +286,8 @@ public abstract class SortingAlgorithm1 : Algorithm
                         break;                        
                     case 3: // change the color of just a single index
                         colorChange(q.index1, q.colorId, array);
-                        showText.text = q.message;
-                        showText.color = colorChangeText(2);
+                        //showText.text = q.message;
+                        //showText.color = colorChangeText(2);
                         break;
                     case 4: // raise two indices up, used to visualize they are being compared
                         array[q.index1].o.transform.position = new Vector3(array[q.index1].o.transform.position.x, array[q.index1].o.transform.position.y + 1, 0);
@@ -311,6 +311,10 @@ public abstract class SortingAlgorithm1 : Algorithm
                     case 7: // update only the text field
                         showText.text = q.message;
                         showText.color = colorChangeText(q.textColorId);
+                        break;
+                    case 8:
+                        array[q.index1].o.transform.GetChild(1).gameObject.SetActive(!array[q.index1].o.transform.GetChild(1).gameObject.activeInHierarchy);
+                        array[q.index1].o.transform.GetChild(1).GetChild(0).GetComponentInChildren<TextMeshPro>().text = q.message;
                         break;
                     default:
                         extendCommands(q);
