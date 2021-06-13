@@ -8,12 +8,14 @@ using TMPro;
 
 public class NQueens : Algorithm
 {
-    int n;
+    int n, stackCalls, backTracks;
     bool solution;
     int [,] internalBoard; // tracks how many queens can move to each tile on the board
+
     TextMeshPro[] labelText1;
     TextMeshPro[] labelText2;
     GameObject[,] board;
+
     [SerializeField] GameObject boxPrefab;
     [SerializeField] GameObject canvas;
     [SerializeField] GameObject text;
@@ -24,6 +26,7 @@ public class NQueens : Algorithm
     public void setup(int n)
     {
         this.n = n;
+        stackCalls = backTracks = 0;
         board = new GameObject[n,n];
         internalBoard = new int[n,n];
         labelText1 = new TextMeshPro[n];
@@ -65,8 +68,10 @@ public class NQueens : Algorithm
         //Camera.main.farClipPlane = (float)(-1.1*z + 200);
     }
     public IEnumerator build(int column){
+        stackCalls++;
+        Debug.Log("Stackcalls: "+ stackCalls);
+
         yield return new WaitForSeconds(time);
-        showText.text = "Test";
         if (column == n) {
 			solution = true;
             yield break;
@@ -76,6 +81,8 @@ public class NQueens : Algorithm
 
         for (i = 0; i < n; i++){
             board[i, column].GetComponent<Renderer>().material.color = Color.blue;
+            showText.text = "Checking " + ((char)(column+'A')).ToString() + (i+1).ToString();
+
             yield return new WaitForSeconds(time);
             setColor(i, column);
             // a safe space
@@ -157,8 +164,12 @@ public class NQueens : Algorithm
                 t = board[i,column].GetComponentInChildren<TextMeshPro>();
                 t.text = "Q";
                 yield return build(column +1 );
-                if (solution)
+                if (solution){
+                    Debug.Log(stackCalls);
+                    Debug.Log(backTracks);
+                    showText.text = "Solution found!";        
                     yield break;
+                }
                  t.text = "";               
                 for (j = 0; j < n; j++){
                     internalBoard[i, j]--;
@@ -249,9 +260,15 @@ public class NQueens : Algorithm
                     }
                     else{
                         board[j,k].GetComponentInChildren<TextMeshPro>().text = internalBoard[j,k].ToString();
-                    }				}
+                    }
+				}
             }
         }
+        backTracks++;
+        Debug.Log("Backtracks: "+backTracks);
+
+        showText.text = "No solution found. Returning to row " + ((char)(column+'A' - 1)).ToString();
+        yield return new WaitForSeconds(time);
     }
     // set the color of one of the board pieces
     // if the internalBoard value is greater than 0, that means at least one queen could move there and another queen cannot be placed
