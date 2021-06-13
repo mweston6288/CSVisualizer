@@ -7,6 +7,6 @@ public class Restart : MonoBehaviour
 {
     public void restartScene()
     {
-        SceneManager.LoadScene("CodyTest1");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

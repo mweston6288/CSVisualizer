@@ -7,7 +7,7 @@ using System;
 public class BubbleSort : SortingAlgorithm1
 {
     [SerializeField] GameObject boxPrefab;
-    [SerializeField] GameObject canvas;
+    [SerializeField] public GameObject canvas;
 
     private Boolean isPlay;
 
@@ -62,7 +62,7 @@ public class BubbleSort : SortingAlgorithm1
         SceneManager.LoadScene("CodyTest1");
     }
 
-    override public IEnumerator extendCommands(QueueCommand q){
+    override public void extendCommands(QueueCommand q){
         throw new NotImplementedException();
     }
     /*

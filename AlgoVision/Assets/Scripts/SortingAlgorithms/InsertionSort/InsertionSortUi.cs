@@ -32,7 +32,7 @@ public class InsertionSortUi : MonoBehaviour
  
         v.time = 1;
         isPlay = false;
-        StartCoroutine(v.readQueue());
+        StartCoroutine(v.readQueue(v.canvas));
     }
 
     // Update is called once per frame

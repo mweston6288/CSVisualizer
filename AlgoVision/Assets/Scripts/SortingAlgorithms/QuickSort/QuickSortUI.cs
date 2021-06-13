@@ -16,7 +16,7 @@ public class QuickSortUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        speedSlider = FindObjectOfType<Slider>();
+        speedSlider = v.canvas.transform.GetChild(1).GetComponent<Slider>();
         startSize = FindObjectOfType<TMP_Dropdown>().value;
 
         if (startSize == 2)
@@ -32,9 +32,9 @@ public class QuickSortUI : MonoBehaviour
             v.setup(7);
         }
  
-        v.time = startSize;
+        v.time = 1;
         isPlay = false;
-        StartCoroutine(v.readQueue());
+        StartCoroutine(v.readQueue(v.canvas));
     }
 
     // Update is called once per frame

@@ -13,12 +13,12 @@ public abstract class SortingAlgorithm1 : Algorithm
     public int comparisons, swaps;
     protected Queue<QueueCommand> queue = new Queue<QueueCommand>();
     private GameObject canvas;
-    private TMP_Text showText;
+    protected TMP_Text showText;
     private Color green;
 
     // This is called in readQueue's default command.
     // The class that extends SortingAlgorithm has to define extra commands
-    abstract public IEnumerator extendCommands(QueueCommand q);
+    abstract public void extendCommands(QueueCommand q);
     abstract public void sort();
     protected class ArrayIndex{
         public GameObject o;
@@ -59,7 +59,7 @@ public abstract class SortingAlgorithm1 : Algorithm
        
        public short commandId;
        public int index1, index2;
-       public short arrayId, colorId;
+       public short arrayId, colorId, textColorId;
        public string message;
        public long time;
 
@@ -137,11 +137,26 @@ public abstract class SortingAlgorithm1 : Algorithm
            this.message = message;
            time = timer.ElapsedMilliseconds;
        }
-       public QueueCommand(short commandId, string message){
+       public QueueCommand(short commandId, string message)
+       {
+           this.commandId = commandId;
+            this.textColorId = 3;
+           this.message = message;
+           time = timer.ElapsedMilliseconds;
+       }
+       public QueueCommand(short commandId, string message, short textColorId)
+        {
            this.commandId = commandId;
            this.message = message;
-           //this.colorId = colorId;
+           this.textColorId = textColorId;
            time = timer.ElapsedMilliseconds;
+       }
+       // Use this one if you are doing something that affects a whole array in general
+       public QueueCommand(short commandId, short arrayId){
+           this.commandId = commandId;
+           this.arrayId = arrayId;
+            time = timer.ElapsedMilliseconds;
+
        }
    }
 
@@ -184,15 +199,27 @@ public abstract class SortingAlgorithm1 : Algorithm
         ArrayIndex temp = a;
         Vector3 position;
 
-        a = b;
+        int temp1;
+
+        temp1 = a.value;
+
+        a.value = b.value;
+        b.value = temp1;
+
+        var t = a.o.GetComponentInChildren<TextMeshPro>();
+        t.text = a.value.ToString();
+
+        t = b.o.GetComponentInChildren<TextMeshPro>();
+        t.text = b.value.ToString();
+        
+        /*a = b;
         b = temp;
         
         position = a.o.transform.position;
         a.o.transform.position = new Vector3(b.o.transform.position.x, a.o.transform.position.y, 0);
         b.o.transform.position = new Vector3(position.x, b.o.transform.position.y, 0);
-
         //showText.text = "Swap!";
-        //showText.color = Color.blue;
+        //showText.color = Color.blue;*/
     }
 
     // This swap command is meant to be used by shuffle() when setting up the array
@@ -214,21 +241,29 @@ public abstract class SortingAlgorithm1 : Algorithm
     }
     
     // Go through the queue
-    public IEnumerator readQueue()
+    public IEnumerator readQueue(GameObject canvas)
     {
         Debug.Log("Total runtime: " + stopTime);
         int totalCommands = queue.Count;
         QueueCommand q;
         while (queue.Count > 0){
             q = queue.Dequeue();
+
+
+            //Time bar fuctionality
+            //Debug.LogError("Filling time bar with " + (1f / totalCommands));
+            canvas.transform.GetChild(10).GetComponent<Slider>().value += (float)(1f / totalCommands);
             completionPercent = 1 - (float)queue.Count / totalCommands;
+            canvas.transform.GetChild(10).GetChild(2).GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = "" + (int)(completionPercent * 100) + "%";
             currentTime = q.time;
-           // Debug.Log(q.commandId);
+            canvas.transform.GetChild(11).GetComponent<TMP_Text>().text = "" + (int)(stopTime * completionPercent) + " ms";
+            canvas.transform.GetChild(12).GetChild(0).GetComponent<TMP_Text>().text = "Comparisons: " + comparisons;
+            canvas.transform.GetChild(12).GetChild(1).GetComponent<TMP_Text>().text = "Swaps: " + swaps;
 
             // Since some of these methods have an auxArray version,
             // we'll jump over to that whenever we want to do something with auxArray
             if (q.arrayId != 0){
-                yield return extendCommands(q);
+                extendCommands(q);
             }
             else{
                 switch (q.commandId)
@@ -247,14 +282,12 @@ public abstract class SortingAlgorithm1 : Algorithm
                         swaps++;
                         // Debug.Log("Swapping values at Index "+ q.index1 + " and "+ q.index2);
                         showText.text = q.message;
-                        var red = new Color(1f, .2f, .361f, 1);
-                        showText.color = red;
+                        showText.color = colorChangeText(1);
                         break;                        
                     case 3: // change the color of just a single index
                         colorChange(q.index1, q.colorId, array);
                         showText.text = q.message;
-                        green = new Color(0.533f, 0.671f, 0.459f);
-                        showText.color = green;
+                        showText.color = colorChangeText(2);
                         break;
                     case 4: // raise two indices up, used to visualize they are being compared
                         array[q.index1].o.transform.position = new Vector3(array[q.index1].o.transform.position.x, array[q.index1].o.transform.position.y + 1, 0);
@@ -263,8 +296,8 @@ public abstract class SortingAlgorithm1 : Algorithm
                         showText.text = q.message;
                         comparisons++;
                         // red color
-                        var blue = new Color(0.6f, 0.686f, 0.761f);
-                        showText.color = blue;
+                        var red = new Color(1f, .2f, .361f, 1);
+                        showText.color = red;//colorChangeText(1);
                         break;
                     case 5: // raise two indices down, used to visualize they are being uncompared
                         array[q.index1].o.transform.position = new Vector3(array[q.index1].o.transform.position.x, array[q.index1].o.transform.position.y - 1, 0);
@@ -277,9 +310,10 @@ public abstract class SortingAlgorithm1 : Algorithm
                         break;
                     case 7: // update only the text field
                         showText.text = q.message;
-                        blue = new Color(0.6f, 0.686f, 0.761f);
-                        showText.color = blue;
-
+                        showText.color = colorChangeText(q.textColorId);
+                        break;
+                    default:
+                        extendCommands(q);
                         break;
                  /*
                     case 0: // set the index of instr[1] from the array indicated by instr[3] to the value in instr[2]
@@ -345,15 +379,14 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
                         */
                 }
             }
-           // Debug.Log("Actual runtime: " + currentTime + " milliseconds");
-//            Debug.Log("Completion percent: " + completionPercent);
-  //          Debug.Log("swaps: " + swaps);
-    //        Debug.Log("Comparisons: " + comparisons);
+            Debug.Log("Actual runtime: " + currentTime + " milliseconds");
+            Debug.Log("Completion percent: " + completionPercent);
+            Debug.Log("swaps: " + swaps);
+            Debug.Log("Comparisons: " + comparisons);
 
         }
         showText.text = "The array is sorted";
-        green = new Color(0.533f, 0.671f, 0.459f);
-        showText.color = green;
+        showText.color = colorChangeText(2);
     }
 
     protected void writeToIndex(ArrayIndex[] array, int index, int value){
@@ -361,11 +394,42 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
         array[index].o.transform.position = new Vector3(array[index].o.transform.position.x, (value+1)*.5f, 0);
         array[index].o.transform.localScale = new Vector3(1, value + 1, 1);
     }
-    // convert the ArrayList object at primary[primaryIndex] into secondary[secondaryIndex]
-    protected void copyArrayValue(ArrayIndex[] primary, ArrayIndex[] secondary, int primaryIndex, int secondaryIndex){
-        primary[primaryIndex].value = secondary[secondaryIndex].value;
-        primary[primaryIndex].o.transform.position = new Vector3(primary[primaryIndex].o.transform.position.x, (primary[primaryIndex].value +1)*.5f, 0);
-        primary[primaryIndex].o.transform.localScale = new Vector3(1, primary[primaryIndex].value +1, 1);
+    private Color colorChangeText(int colorCode)
+    {
+        switch (colorCode)
+        {
+            case 0:
+                return Color.white;
+                //text.color = Color.white;
+            case 1:
+                var red = new Color(1f, .2f, .361f, 1);
+                return red;
+                //text.color = red;//Color.red;
+            case 2:
+                green = new Color(0.533f, 0.671f, 0.459f);
+                return green;
+                //text.color = green;
+                // Debug.Log("InAdex "+ element + " is sorted");
+            case 3:
+                var blue = new Color(0.6f, 0.686f, 0.761f);
+                return blue;
+                //text.color = blue;
+            case 4:
+                return Color.black;
+                //text.color = Color.black;
+            case 5:
+                return Color.yellow;
+                //text.color = Color.yellow;
+            case 6:
+                return Color.blue;
+                //text.color = Color.blue;
+            case 7:
+                return Color.green;
+                //text.color = Color.green;
+            default:
+                blue = new Color(0.6f, 0.686f, 0.761f);
+                return blue;
+        }
     }
     protected void colorChange(int element, int colorCode, ArrayIndex[] array){
         Debug.Log(element);
@@ -421,7 +485,7 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
     // arrayId refers to the array that comparisons are being made in (refer to the QueueCommand for details)
     // colorId refers to th color the indices should be changed to after comparison.
     public void decompare(int x, int y, short arrayId, short colorId){
-        queue.Enqueue(new QueueCommand(5, x, y, 0, ""));
+        queue.Enqueue(new QueueCommand(5, x, y, arrayId, ""));
         queue.Enqueue(new QueueCommand());
         queue.Enqueue(new QueueCommand(1, x, y, arrayId, colorId));
 
@@ -431,7 +495,6 @@ array[instr[1]].o.transform.position = new Vector3(array[instr[1]].o.transform.p
         queue.Enqueue(new QueueCommand(5, x, y, 0, ""));
         queue.Enqueue(new QueueCommand(3, x, arrayId, colorId1));
         queue.Enqueue(new QueueCommand(3, y, arrayId, colorId2));
-        queue.Enqueue(new QueueCommand());
 
     }
 

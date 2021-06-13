@@ -7,7 +7,7 @@ using System;
 public class InsertionSort : SortingAlgorithm1
 {
     [SerializeField] GameObject boxPrefab;
-    [SerializeField] GameObject canvas;
+    [SerializeField] public GameObject canvas;
     
     private Boolean isPlay;
 
@@ -66,7 +66,7 @@ public class InsertionSort : SortingAlgorithm1
         SceneManager.LoadScene("InsertionSortScene");
     }
 
-    override public IEnumerator extendCommands(QueueCommand q){
+    override public void extendCommands(QueueCommand q){
         throw new NotImplementedException();
     }
 }
