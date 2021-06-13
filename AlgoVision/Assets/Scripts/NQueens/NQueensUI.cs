@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
-public class SelectionSortUI : MonoBehaviour
+
+public class NQueensUI : MonoBehaviour
 {
 
-    [SerializeField] SelectionSort v;
-   [SerializeField] Slider speedSlider;
+    [SerializeField] NQueens v;
+    [SerializeField] Slider speedSlider;
 
     private Boolean isPlay;
     int startSize;
@@ -20,20 +21,20 @@ public class SelectionSortUI : MonoBehaviour
 
         if (startSize == 2)
         {
-            v.setup(21);
+            v.setup(4);
         }
         else if (startSize == 1)
         {
-            v.setup(13);
+            v.setup(6);
         }
         else
         {
-            v.setup(7);
+            v.setup(8);
         }
  
         v.time = 1;
         isPlay = false;
-        StartCoroutine(v.readQueue(v.canvas));
+        StartCoroutine(v.build(0));
     }
 
     // Update is called once per frame
@@ -56,3 +57,4 @@ public class SelectionSortUI : MonoBehaviour
         }
     }
 }
+

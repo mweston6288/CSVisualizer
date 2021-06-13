@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using Random = System.Random;
 using UnityEngine; // needed for Unity stuff
+using TMPro;
 public abstract class Graph : Algorithm // MonoBehaviour is the root class for Unity scripts
 {
     // Store vertex values of their coordinate
@@ -30,9 +31,9 @@ public abstract class Graph : Algorithm // MonoBehaviour is the root class for U
             neighborEdges = new List<Edge>();
             o = GameObject.Instantiate(boxPrefab);// CREATE CUBES
             o.transform.position = new Vector3(vertexBluePrints[value,0],vertexBluePrints[value,1],0);
-            var t = o.GetComponentInChildren<TextMesh>();
+            var t = o.GetComponentInChildren<TextMeshPro>();
             t.text = value.ToString();
-            t.transform.position = new Vector3(o.transform.position.x,o.transform.position.y,o.transform.position.z - 1);
+            //t.transform.position = new Vector3(o.transform.position.x,o.transform.position.y,o.transform.position.z - 1);
         }
         public void addNeighbor(Vertex v, Edge e){
             neighbors.Add(v);
