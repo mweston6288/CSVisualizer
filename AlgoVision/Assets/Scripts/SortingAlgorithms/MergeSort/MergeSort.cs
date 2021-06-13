@@ -9,7 +9,7 @@ using System;
 public class MergeSort : SortingAlgorithmWithAuxArray1
 {
     [SerializeField] GameObject boxPrefab;
-    [SerializeField] GameObject canvas;
+    [SerializeField] public GameObject canvas;
 
     private Boolean isPlay;
 

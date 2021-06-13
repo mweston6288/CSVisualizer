@@ -8,7 +8,7 @@ using System;
 public class SelectionSort : SortingAlgorithm1
 {
     [SerializeField] GameObject boxPrefab;
-    [SerializeField] GameObject canvas;
+    [SerializeField] public GameObject canvas;
 
     private Boolean isPlay;
 
