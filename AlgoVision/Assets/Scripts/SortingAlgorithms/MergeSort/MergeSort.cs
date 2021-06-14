@@ -1,10 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System;
 
-public class MergeSort : SortingAlgorithmWithAuxArray
+
+public class MergeSort : SortingAlgorithmWithAuxArray1
 {
     [SerializeField] GameObject boxPrefab;
+    [SerializeField] public GameObject canvas;
+
+    private Boolean isPlay;
+
+    void Start()
+    {
+        canvas = GameObject.Find("Canvas");
+    }
+
     // To reduce runtime, we'll use the same auxArray for everything. 
     // This value tells us which index is the last possible index of the leftAuxArray
     int midSplit;
@@ -19,13 +32,20 @@ public class MergeSort : SortingAlgorithmWithAuxArray
         setAuxCam();
 
     }
-    void sort(){
-        buildArray(boxPrefab);
-        buildAuxArray();
+    override public void sort(){
+        buildArray(boxPrefab, canvas);
+        buildAuxArray(boxPrefab, canvas);
 
         midSplit = (size - 2)/ 2 + 1;
+        timer.Restart();
+
+        queue.Enqueue(new QueueCommand(7, "Starting Merge Sort", 5));
+        queue.Enqueue(new QueueCommand());
+
         mergeSort(0, size - 1);
-        q.Enqueue(new short[] {8, 0, 0, 0});
+        queue.Enqueue(new QueueCommand(6, 0, size - 1, 0, 2));
+        timer.Stop();
+        stopTime = timer.ElapsedMilliseconds;
     }   
 
     private void merge(int low, int middle, int high)
@@ -40,15 +60,16 @@ public class MergeSort : SortingAlgorithmWithAuxArray
         for (i = 0; i < n1; i++)
         {
             auxArr[i] = arr[low+i];
-            q.Enqueue(new short[] {10, (short)i, (short)(low + i), 1});
+            queue.Enqueue(new QueueCommand(11, i, low+i, 1));
+            queue.Enqueue(new QueueCommand());
             //leftArray[i] = array[low + i];
         }
 
         for (j = 0; j < n2; j++)
         {
             auxArr[j + midSplit] = arr[middle + 1 + j];
-            q.Enqueue(new short[] {10, (short)(j+midSplit), (short)(middle+1+j), 1});
-
+            queue.Enqueue(new QueueCommand(11, j + midSplit, middle + 1 + j, 1));
+            queue.Enqueue(new QueueCommand());
             //rightArray[j] = array[middle + 1 + j];
         }
 
@@ -58,20 +79,25 @@ public class MergeSort : SortingAlgorithmWithAuxArray
 
         while (i < n1 && j < midSplit + n2)
         {
-            if (compare(i, j, 4, 1) && auxArr[i] <= auxArr[j])
+            if (compare(i, j, 1) && auxArr[i] <= auxArr[j])
             //if (leftArray[i] <= rightArray[j])
             {
                 arr[k] = auxArr[i];
-                q.Enqueue(new short[] {10, (short)k, (short)i, 0});
-                q.Enqueue(new short[] {2, (short)i, 4, 1});
+                queue.Enqueue(new QueueCommand(9, k, i, 1));
+                queue.Enqueue(new QueueCommand());
+                decompare(i, j, 1, 0);
+      //          q.Enqueue(new short[] {2, (short)i, 4, 1});
 
                 i++;
             }
             else
             {
                 arr[k] = auxArr[j];
-                q.Enqueue(new short[] {10, (short)k, (short)j, 0});
-                q.Enqueue(new short[] {2, (short)j, 4, 1});
+                queue.Enqueue(new QueueCommand(9, k, j, 1));
+                queue.Enqueue(new QueueCommand());
+                decompare(i, j, 1, 0);
+        //        q.Enqueue(new short[] {10, (short)k, (short)j, 0});
+          //      q.Enqueue(new short[] {2, (short)j, 4, 1});
                 j++;
             }
             k++; 
@@ -80,33 +106,49 @@ public class MergeSort : SortingAlgorithmWithAuxArray
         while (i < n1)
         {
             arr[k] = auxArr[i];
-            q.Enqueue(new short[] {10, (short)k, (short)i, 0});
-            q.Enqueue(new short[] {2, (short)i, 4, 1});
+            queue.Enqueue(new QueueCommand(9, k, i, 1));
+            queue.Enqueue(new QueueCommand());
+            //q.Enqueue(new short[] {10, (short)k, (short)i, 0});
+//            q.Enqueue(new short[] {2, (short)i, 4, 1});
             i++;
             k++;
         }
         while (j < n2+ midSplit)
         {
             arr[k] = auxArr[j];
-            q.Enqueue(new short[] {10, (short)k, (short)j, 0});
-            q.Enqueue(new short[] {2, (short)j, 4, 1});
+            queue.Enqueue(new QueueCommand(9, k, j, 1));
+            queue.Enqueue(new QueueCommand());
+  //          q.Enqueue(new short[] {10, (short)k, (short)j, 0});
+    //        q.Enqueue(new short[] {2, (short)j, 4, 1});
             j++;
             k++;
         }
-        q.Enqueue(new short[]{9, 0, 0, 0});
+        queue.Enqueue(new QueueCommand(10, 1));
     }
 
     private void mergeSort(int low, int high){
+        queue.Enqueue(new QueueCommand(7, "Calling Merge Sort from index " + low + " to index " + high, 5));
+        queue.Enqueue(new QueueCommand());
+        
         if (low < high)
         {
             int med = (low + high - 1) / 2;
 
+            queue.Enqueue(new QueueCommand(6, low, high, 0, 3));
+
+            queue.Enqueue(new QueueCommand(7, "Locate the Midpoint of the Array", 5));
+            queue.Enqueue(new QueueCommand());
+            queue.Enqueue(new QueueCommand((short)8, med, high, 0, "Mid"));
+            queue.Enqueue(new QueueCommand());
+
+            queue.Enqueue(new QueueCommand((short)8, med, high, 0, "Mid"));
+            queue.Enqueue(new QueueCommand(6, low, high, 0, 0));
+            
             mergeSort(low, med);
             mergeSort(med + 1, high);
 
-            q.Enqueue(new short[] { 6, (short)low, (short)high , 0});
+
             merge(low, med, high);
-            q.Enqueue(new short[] { 7, (short)low, (short)high,0 });
         }
 
     }
