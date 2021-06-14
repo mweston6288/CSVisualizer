@@ -43,7 +43,7 @@ public class BinarySearch : Algorithm
     }
     
     // Start is called before the first frame update
-    public void setup(int n)
+    public void setup(int n, int searchToken)
     {
         int i;
         size = n;
@@ -55,7 +55,7 @@ public class BinarySearch : Algorithm
         for(i = 0; i < size; i++){
             array[i].Object.GetComponentInChildren<TextMeshPro>().text = array[i].value.ToString();
         }
-        searchToken = r.Next(21);
+        this.searchToken = searchToken;
         search();
     }
     void sort(){

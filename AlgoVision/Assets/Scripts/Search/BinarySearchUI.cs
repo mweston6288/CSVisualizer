@@ -9,6 +9,7 @@ public class BinarySearchUI : MonoBehaviour
 {
      [SerializeField] BinarySearch v;
     [SerializeField] Slider speedSlider;
+    [SerializeField] InputField userInput;
 
     private Boolean isPlay;
     int startSize;
@@ -16,26 +17,32 @@ public class BinarySearchUI : MonoBehaviour
     void Start()
     {
         speedSlider = FindObjectOfType<Slider>();
+
+ 
+        v.time = 1;
+        isPlay = false;
+        userInput.OnSubmit(HandleSubmit);
+    }
+
+    void HandleSubmit(){
         startSize = FindObjectOfType<TMP_Dropdown>().value;
 
         if (startSize == 2)
         {
-            v.setup(21);
+            v.setup(21, int.Parse(userInput.text));
         }
         else if (startSize == 1)
         {
-            v.setup(13);
+            v.setup(13, userInput.text);
         }
         else
         {
-            v.setup(8);
-        }
- 
-        v.time = 1;
-        isPlay = false;
-        StartCoroutine(v.readQueue());
-    }
+            v.setup(8, userInput.text);
+        }        
 
+        StartCoroutine(v.readQueue());
+
+    }
     // Update is called once per frame
     void Update()
     {
