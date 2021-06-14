@@ -38,31 +38,20 @@ public class AVL : Algorithm
     {
         public short commandId;
         public int arg1, arg2;
+        public string message;
 
-        public AVLCommand(short commandId, int a1, int a2)
+        public AVLCommand(short commandId, int a1, int a2, string m)
         {
             this.commandId = commandId;
             this.arg1 = a1;
             this.arg2 = a2;
+            this.message = m;
         }
     }
 
     void Start() // starts here
     {
-        string text = "30, 123, 2314,blighmy,342,234";
-
-        foreach (var token in text.Split(','))
-        {
-            try
-            {
-                Debug.Log(">" + Int32.Parse(token));
-            }
-            catch (FormatException)
-            {
-                Debug.Log("Cant convert " + token + " to int");
-            }
-
-        }
+        string text = "";
 
         size = 31; // number of keys to be inserted
         int[] keys; // where the keys are stored in insertion order
@@ -78,13 +67,35 @@ public class AVL : Algorithm
             heights[i] = 0; // default height is zero
         }
 
-        if(false) // if the user wants to insert their own values. false is a placeholder until we implement feature
+        if (text != null && text != "") // if the user wants to insert their own values.
         {
-            foreach (var token in text.Split(','))
+            string[] textInserts = text.Split(',');
+            keys = new int[textInserts.Length];
+
+            for (int i = 0; i < keys.Length; i++)
+            {
+                keys[i] = -1;
+            }
+
+            int p = 0;
+            foreach (string token in textInserts)
             {
                 try
                 {
-                    Debug.Log(">" + Int32.Parse(token));
+                    int h = Int32.Parse(token);
+                    Debug.Log(">" + h);
+
+                    if (h < 0)
+                    {
+                        Debug.Log(h + " is less than 0, please use values of 0 and greater.");
+                    }
+                    else
+                    {
+                        keys[p] = h;
+                        p++;
+                        order = order + h.ToString() + ", "; // adds the inserted number to the string for printing
+                    }
+
                 }
                 catch (FormatException)
                 {
@@ -92,18 +103,41 @@ public class AVL : Algorithm
                 }
 
             }
-        }
 
-        for (int i = 0; i < size; i++) // insertion of keys
+            if (p == 0)
+            {
+                Debug.Log("No valid keys found.");
+            }
+            else
+            {
+                int[] tempKeys = new int[p];
+                for (int i = 0; i < p; i++)
+                {
+                    tempKeys[i] = keys[i];
+                }
+                keys = tempKeys;
+            }
+
+        }
+        else
         {
-            int ins = r.Next(1, 101);
-
-
-            insert(i+1, 0);
-
-            order = order + ins.ToString() + ", "; // adds the inserted number to the string for printing
-
+            Debug.Log("No inputs given, generating random list of keys.");
+            keys = new int[size];
+            for(int i = 0; i < size; i++)
+            {
+                int ins = r.Next(1, 101);
+                keys[i] = ins;
+                order = order + ins.ToString() + ", "; // adds the inserted number to the string for printing
+            }
         }
+
+        Debug.Log(order); // prints the keys in order of insertion
+
+        for (int i = 0; i < keys.Length; i++) // insertion of keys
+        {
+            insert(keys[i], 0);
+        }
+
         printIntTree();
         printHeights();
         Nodetree = new AVLNode[inttree.Length * 2 + 1];
@@ -111,41 +145,44 @@ public class AVL : Algorithm
         Ycoords = new float[Nodetree.Length];
         setCoords();
 
-        Debug.Log(order); // prints the keys in order of insertion
-        StartCoroutine(readQueue(0.5f));
+        
+        StartCoroutine(readQueue(0.02f));
     }
 
     void insert(int key, int I)
     {
-        if (I >= inttree.Length)
+        if (I >= inttree.Length) // if the Index needed is outside the array, increase the depth
         {
             updateDepth();
         }
-        if (inttree[I] == -1)
+        if (inttree[I] == -1) // if the Index is null (-1)
         {
-            inttree[I] = key;
+            inttree[I] = key; 
             heights[I] = 1;
-            q.Enqueue(new AVLCommand(0, I, key));
-            if (I != 0)
+            q.Enqueue(new AVLCommand(0, I, key, ("Null node found, creating a new node with the value " + key)));
+            if (I != 0) // if the new node isn't at index 0 (the root of the tree) draw a line to the parent node 
             {
-                q.Enqueue(new AVLCommand(1, I, parentI(I)));
+                q.Enqueue(new AVLCommand(1, I, parentI(I), "Linking node to it's new parent."));
             }
-            q.Enqueue(new AVLCommand(-1, 0, 0));
+            q.Enqueue(new AVLCommand(-1, 0, 0, ""));
             return;
         }
-        q.Enqueue(new AVLCommand(2, I, 1));
-        q.Enqueue(new AVLCommand(-1, 0, 0));
-        if (inttree[I] > key)
+        q.Enqueue(new AVLCommand(2, I, 1, "Null node not found")); // null node not found, highlight current node to show insertion path
+        q.Enqueue(new AVLCommand(-1, 0, 0, ""));
+        if (inttree[I] > key) // go left
         {
+            q.Enqueue(new AVLCommand(-1, 0, 0, ("Current Node's key: " + inttree[I] + "> Inserted key: " + key + ". continue down left subtree")));
             insert(key, leftCI(I));
         }
-        else
+        else // go right
         {
+            q.Enqueue(new AVLCommand(-1, 0, 0, ("Current Node's key: " + inttree[I] + "< Inserted key: " + key + ". continue down right subtree")));
             insert(key, rightCI(I));
         }
 
-        q.Enqueue(new AVLCommand(2, I, 0));
-        q.Enqueue(new AVLCommand(-1, 0, 0));
+        q.Enqueue(new AVLCommand(2, I, 0, "Return to parent."));
+        q.Enqueue(new AVLCommand(-1, 0, 0, ""));
+        q.Enqueue(new AVLCommand(-1, 0, 0, "Check balance of the node"));
 
         heights[I] = max(heights[leftCI(I)], heights[rightCI(I)]) + 1;
 
@@ -155,20 +192,35 @@ public class AVL : Algorithm
         {
             if (key >= inttree[leftCI(I)])
             {
+                q.Enqueue(new AVLCommand(-1, 0, 0, "Node is left heavy and subtree is right heavy: Left-Right case"));
+                q.Enqueue(new AVLCommand(-1, 0, 0, "Performing left rotate on left subtree."));
                 lRotate(leftCI(I));
+                q.Enqueue(new AVLCommand(-1, 0, 0, "Performing right rotate on node."));
+                rRotate(I);
             }
-
-            rRotate(I);
-
+            else
+            {
+                q.Enqueue(new AVLCommand(-1, 0, 0, "Node is left heavy and subtree is left heavy: Left-Left case"));
+                q.Enqueue(new AVLCommand(-1, 0, 0, "Performing right rotate on node."));
+                rRotate(I);
+            }
         }
         else if (balance < -1)
         {
             if (key < inttree[rightCI(I)])
             {
+                q.Enqueue(new AVLCommand(-1, 0, 0, "Node is right heavy and subtree is left heavy: Right-Left case"));
+                q.Enqueue(new AVLCommand(-1, 0, 0, "Performing left rotate on left subtree."));
                 rRotate(rightCI(I));
+                q.Enqueue(new AVLCommand(-1, 0, 0, "Performing left rotate on node."));
+                lRotate(I);
             }
-
-            lRotate(I);
+            else
+            {
+                q.Enqueue(new AVLCommand(-1, 0, 0, "Node is right heavy and subtree is right heavy: Right-Right case"));
+                q.Enqueue(new AVLCommand(-1, 0, 0, "Performing left rotate on node."));
+                lRotate(I);
+            }
         }
 
         return;
@@ -282,7 +334,7 @@ public class AVL : Algorithm
             int[] dudes = shifts.Dequeue();
 
             swap(dudes[0], dudes[1]);
-            q.Enqueue(new AVLCommand(3, dudes[0], dudes[1]));
+            q.Enqueue(new AVLCommand(3, dudes[0], dudes[1], ""));
 
             if (leftCI(dudes[0]) < inttree.Length && inttree[leftCI(dudes[0])] != -1)
             {
@@ -317,7 +369,7 @@ public class AVL : Algorithm
 
         
 
-        q.Enqueue(new AVLCommand(3, i, d));
+        q.Enqueue(new AVLCommand(3, i, d, ""));
 
     }
 
@@ -340,7 +392,7 @@ public class AVL : Algorithm
 
 
 
-        q.Enqueue(new AVLCommand(3, i, d));
+        q.Enqueue(new AVLCommand(3, i, d, ""));
 
     }
 
@@ -396,55 +448,68 @@ public class AVL : Algorithm
         int t3 = rightCI(y);
         int c = 6;
 
-        if(inttree[t1] != -1)
+        if(t1 < inttree.Length && inttree[t1] != -1)
         {
-            q.Enqueue(new AVLCommand(4, t1, c--));
+            q.Enqueue(new AVLCommand(4, t1, c--, ""));
         }
 
-        q.Enqueue(new AVLCommand(2, x, c--));
+        q.Enqueue(new AVLCommand(2, x, c--, ""));
 
-        if (inttree[t2] != -1)
+        if (t2 < inttree.Length && inttree[t2] != -1)
         {
-            q.Enqueue(new AVLCommand(4, t2, c--));
+            q.Enqueue(new AVLCommand(4, t2, c--, ""));
         }
 
-        q.Enqueue(new AVLCommand(2, y, c--));
+        q.Enqueue(new AVLCommand(2, y, c--, ""));
 
-        if (inttree[t1] != -1)
+        if (t3 < inttree.Length && inttree[t3] != -1)
         {
-            q.Enqueue(new AVLCommand(4, t3, c--));
+            q.Enqueue(new AVLCommand(4, t3, c--, ""));
         }
         
-        q.Enqueue(new AVLCommand(-1, 0, 0));
+        q.Enqueue(new AVLCommand(-1, 0, 0, ""));
 
 
         // move tree1 downleft
-        movetree(t1, leftCI(t1));
-
+        if (t1 < inttree.Length && inttree[t1] != -1)
+        {
+            movetree(t1, leftCI(t1));
+            q.Enqueue(new AVLCommand(-1, 0, 0, ""));
+        }
+        
 
         // move x downleft
         swap(x, leftCI(x));
-        q.Enqueue(new AVLCommand(3, x, leftCI(x)));
-        q.Enqueue(new AVLCommand(-1, 0, 0));
+        q.Enqueue(new AVLCommand(3, x, leftCI(x), ""));
+        q.Enqueue(new AVLCommand(-1, 0, 0, ""));
 
 
         // move tree2 left 1
-        movetree(t2, rightCI(t1));
-
+        if (t2 < inttree.Length && inttree[t2] != -1)
+        {
+            movetree(t2, rightCI(t1));
+            q.Enqueue(new AVLCommand(-1, 0, 0, ""));
+        }
+        
 
 
         // move move y up
         inttree[parentI(y)] = inttree[y];
         inttree[y] = -1;
-        q.Enqueue(new AVLCommand(3, y, parentI(y)));
+        q.Enqueue(new AVLCommand(3, y, parentI(y), ""));
+        q.Enqueue(new AVLCommand(-1, 0, 0, ""));
 
 
         // move tree 3 up
-        movetree(t3, parentI(t3));
+        if (t3 < inttree.Length && inttree[t3] != -1)
+        {
+            movetree(t3, parentI(t3));
+            q.Enqueue(new AVLCommand(-1, 0, 0, ""));
+        }
+        
 
-
-        q.Enqueue(new AVLCommand(4, I, 0));
-        q.Enqueue(new AVLCommand(-1, 0, 0));
+        q.Enqueue(new AVLCommand(4, I, 0, ""));
+        q.Enqueue(new AVLCommand(-1, 0, 0, ""));
         heights[I] = updateHeights(I);
 
     }
@@ -458,59 +523,69 @@ public class AVL : Algorithm
         int t2 = rightCI(x);
         int c = 6;
 
-        if (inttree[t1] != -1)
+        if (t3 < inttree.Length && inttree[t3] != -1)
         {
-            q.Enqueue(new AVLCommand(4, t3, c--));
+            q.Enqueue(new AVLCommand(4, t3, c--, ""));
         }
 
-        q.Enqueue(new AVLCommand(2, y, c--));
+        q.Enqueue(new AVLCommand(2, y, c--, ""));
 
-        if (inttree[t2] != -1)
+        if (t2 < inttree.Length && inttree[t2] != -1)
         {
-            q.Enqueue(new AVLCommand(4, t2, c--));
+            q.Enqueue(new AVLCommand(4, t2, c--, ""));
         }
 
-        q.Enqueue(new AVLCommand(2, x, c--));
+        q.Enqueue(new AVLCommand(2, x, c--, ""));
 
-        if (inttree[t1] != -1)
+        if (t1 < inttree.Length && inttree[t1] != -1)
         {
-            q.Enqueue(new AVLCommand(4, t1, c--));
+            q.Enqueue(new AVLCommand(4, t1, c--, ""));
         }
 
-        q.Enqueue(new AVLCommand(-1, 0, 0));
+        q.Enqueue(new AVLCommand(-1, 0, 0, ""));
+
 
         // move tree3 downright
-        movetree(t3, rightCI(t3));
-        q.Enqueue(new AVLCommand(-1, 0, 0));
-
+        if (t3 < inttree.Length && inttree[t3] != -1)
+        {
+            movetree(t3, rightCI(t3));
+            q.Enqueue(new AVLCommand(-1, 0, 0, ""));
+        }
+        
 
         // move y downright
         inttree[rightCI(y)] = inttree[y];
         inttree[y] = -1;
-        q.Enqueue(new AVLCommand(3, y, rightCI(y)));
-        q.Enqueue(new AVLCommand(-1, 0, 0));
+        q.Enqueue(new AVLCommand(3, y, rightCI(y), ""));
+        q.Enqueue(new AVLCommand(-1, 0, 0, ""));
 
 
         // movetree2 right 1
-        movetree(t2, leftCI(t3));
-        q.Enqueue(new AVLCommand(-1, 0, 0));
-
-
+        if (t2 < inttree.Length && inttree[t2] != -1)
+        {
+            movetree(t2, leftCI(t3));
+            q.Enqueue(new AVLCommand(-1, 0, 0, ""));
+        }
+        
 
         // move x up
         inttree[parentI(x)] = inttree[x];
         inttree[x] = -1;
-        q.Enqueue(new AVLCommand(3, x, parentI(x)));
-        q.Enqueue(new AVLCommand(-1, 0, 0));
+        q.Enqueue(new AVLCommand(3, x, parentI(x), ""));
+        q.Enqueue(new AVLCommand(-1, 0, 0, ""));
 
 
         // move tree1 up
-        movetree(t1, parentI(t1));
-        q.Enqueue(new AVLCommand(-1, 0, 0));
+        if (t1 < inttree.Length && inttree[t1] != -1)
+        {
+            movetree(t1, parentI(t1));
+            q.Enqueue(new AVLCommand(-1, 0, 0, ""));
+        }
+        
 
 
-        q.Enqueue(new AVLCommand(4, I, 0));
-        q.Enqueue(new AVLCommand(-1, 0, 0));
+        q.Enqueue(new AVLCommand(4, I, 0, ""));
+        q.Enqueue(new AVLCommand(-1, 0, 0, ""));
         heights[I] = updateHeights(I);
 
     }
@@ -616,6 +691,12 @@ public class AVL : Algorithm
     {
         foreach (AVLCommand instr in q)
         {
+            if(instr.message != "" && instr.message != null)
+            {
+                Debug.Log(instr.message);
+            }
+
+
             //Debug.Log(instr.commandId + "\t" + instr.arg1 + "\t" + instr.arg2);
             switch (instr.commandId)
             {
