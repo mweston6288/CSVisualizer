@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System;
 using Random = System.Random;
 using UnityEngine; // needed for Unity stuff
+using TMPro;
 public abstract class Graph : Algorithm // MonoBehaviour is the root class for Unity scripts
 {
     // Store vertex values of their coordinate
     public static int[,] vertexBluePrints = new int[,]{{0,2},{2,4},{2,0},{6,4},{6,0},{8,2}};
     // Store edge values of vertex neighbors
     public static int [,] edgeBluePrints = new int[,]{{0,1},{0,2},{1,2},{1,3},{2,3},{2,4},{3,4},{3,5},{4,5}};
+    public static float[,] edgePosition = new float[,] { { 0.75f, 3.33f }, { 0.75f, 0.67f }, { 1.75f, 2f }, { 3.9f, 4.5f }, { 4f, 2.5f }, { 4f, -0.5f }, { 6.35f, 2f }, { 7.25f, 3.33f }, { 7.25f, 0.67f } };
     protected Queue queue = new Queue();
 
     public static int vertex = 6;
@@ -23,16 +25,16 @@ public abstract class Graph : Algorithm // MonoBehaviour is the root class for U
         public List<Edge> neighborEdges;
 
         public GameObject o;
-        public Vertex(int value, GameObject boxPrefab){
+        public Vertex(int value, GameObject spherePrefab){
             this.value = value;
             name = (char)(value + 'A');
             neighbors = new List<Vertex>();
             neighborEdges = new List<Edge>();
-            o = GameObject.Instantiate(boxPrefab);// CREATE CUBES
+            o = GameObject.Instantiate(spherePrefab);// CREATE CUBES
             o.transform.position = new Vector3(vertexBluePrints[value,0],vertexBluePrints[value,1],0);
-            var t = o.GetComponentInChildren<TextMesh>();
+            var t = o.GetComponentInChildren<TextMeshPro>();
             t.text = value.ToString();
-            t.transform.position = new Vector3(o.transform.position.x,o.transform.position.y,o.transform.position.z - 1);
+            //t.transform.position = new Vector3(o.transform.position.x,o.transform.position.y,o.transform.position.z - 1);
         }
         public void addNeighbor(Vertex v, Edge e){
             neighbors.Add(v);
@@ -46,7 +48,7 @@ public abstract class Graph : Algorithm // MonoBehaviour is the root class for U
         public int j;
         public int weight;
         public LineRenderer edge;
-        public Edge(int id, int weight){
+        public Edge(int id, int weight, GameObject edgeWeigth){
             this.id = id;
             i = edgeBluePrints[id,0];
             j = edgeBluePrints[id,1];
@@ -57,6 +59,11 @@ public abstract class Graph : Algorithm // MonoBehaviour is the root class for U
             edge.GetComponent<LineRenderer>().endWidth = .1f;
             edge.GetComponent<LineRenderer>().positionCount = 2;
             edge.GetComponent<LineRenderer>().useWorldSpace = true;
+
+            var text = GameObject.Instantiate(edgeWeigth);
+            text.GetComponent<TextMeshPro>().text = weight.ToString();
+            text.transform.position = new Vector3(edgePosition[id, 0], edgePosition[id, 1], 0);
+
             edge.SetPosition(0, new Vector3(vertices[i].o.transform.position.x, vertices[i].o.transform.position.y, 0));
             edge.SetPosition(1, new Vector3(vertices[j].o.transform.position.x, vertices[j].o.transform.position.y, 0));
 

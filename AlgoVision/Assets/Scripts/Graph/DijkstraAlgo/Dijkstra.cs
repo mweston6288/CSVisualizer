@@ -2,20 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
 public class Dijkstra : Graph
 {
 int main; // The primary vertex which all other vertices must reach
     protected static List head; // a linked list of the order each vertex will be visited in the algorithm
-    [SerializeField] GameObject boxPrefab;
-
+    [SerializeField] GameObject spherePrefab;
+    [SerializeField] GameObject edgeValue;
     // Extends a regular vertex by including the distance from the main vertex, its parent vertex and whether it has been visited
     protected class DijkstraVertex : Vertex{
         public DijkstraVertex parent;
         public Edge parentEdge;
         public double weight;
         public bool visited;
-        public DijkstraVertex(int value, GameObject boxPrefab) : base(value, boxPrefab){
+        public DijkstraVertex(int value, GameObject spherePrefab) : base(value, spherePrefab){
             weight = double.PositiveInfinity;
         }
     }
@@ -43,10 +42,10 @@ int main; // The primary vertex which all other vertices must reach
     {
         vertices = new DijkstraVertex[vertex];
         for(int i = 0; i < vertex; i++){
-            vertices[i] = new DijkstraVertex(i, boxPrefab);
+            vertices[i] = new DijkstraVertex(i, spherePrefab);
         }
         for(int i = 0; i < edge; i++){
-            edges[i] = new Edge(i, r.Next(1,21));
+            edges[i] = new Edge(i, r.Next(1,21), edgeValue);
         }
         this.main = main;
         DijkstraAlgorithm();
