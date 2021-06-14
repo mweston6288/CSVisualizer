@@ -17,32 +17,26 @@ public class BinarySearchUI : MonoBehaviour
     void Start()
     {
         speedSlider = FindObjectOfType<Slider>();
-
- 
-        v.time = 1;
-        isPlay = false;
-        userInput.OnSubmit(HandleSubmit);
-    }
-
-    void HandleSubmit(){
         startSize = FindObjectOfType<TMP_Dropdown>().value;
 
         if (startSize == 2)
         {
-            v.setup(21, int.Parse(userInput.text));
+            v.setup(21,15);
         }
         else if (startSize == 1)
         {
-            v.setup(13, userInput.text);
+            v.setup(13,15);
         }
         else
         {
-            v.setup(8, userInput.text);
-        }        
-
+            v.setup(8,15);
+        }
+ 
+        v.time = 1;
+        isPlay = false;
         StartCoroutine(v.readQueue());
-
     }
+
     // Update is called once per frame
     void Update()
     {
