@@ -14,7 +14,7 @@ public class InsertionSortUi : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        speedSlider = FindObjectOfType<Slider>();
+        speedSlider = v.canvas.transform.GetChild(1).GetComponent<Slider>();
         startSize = FindObjectOfType<TMP_Dropdown>().value;
 
         if (startSize == 2)

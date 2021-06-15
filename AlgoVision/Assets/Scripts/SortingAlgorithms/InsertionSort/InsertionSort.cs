@@ -18,25 +18,54 @@ public class InsertionSort : SortingAlgorithm1
         buildArray(boxPrefab, canvas);
         timer.Restart();
         int i,j;
+
+        queue.Enqueue(new QueueCommand());
+        queue.Enqueue(new QueueCommand(7, "Index 0 is a one element array, and is therefore sorted."));
+        queue.Enqueue(new QueueCommand(3, 0, (short)0, 5));
+        queue.Enqueue(new QueueCommand());
+        queue.Enqueue(new QueueCommand(3, 0, (short)0, 2));
+        queue.Enqueue(new QueueCommand());
+
+
+        
+        
         for(i = 1; i < size; i++)
         {
+            queue.Enqueue(new QueueCommand(7, "Selecting our next insertion index."));
+            queue.Enqueue(new QueueCommand(3, i, (short)0, 5));
+            queue.Enqueue(new QueueCommand((short)8, i, i, 0, "Insert"));
+            queue.Enqueue(new QueueCommand());
+            queue.Enqueue(new QueueCommand());
             for(j = i-1; j >= 0; j--)
             {
                 if(compare(j, j+1, 0) && arr[j] > arr[j+1])
                 {
+                    queue.Enqueue(new QueueCommand(7, "" + arr[j].ToString() + " is greater than our Insert. Scooch " + arr[j].ToString() + " to the right"));
+                    queue.Enqueue(new QueueCommand());
                     swap(j + 1, j);
+
+                    queue.Enqueue(new QueueCommand((short)8, j + 1, i, 0, "Insert"));
+                    queue.Enqueue(new QueueCommand((short)8, j, i, 0, "Insert"));
+                    queue.Enqueue(new QueueCommand(3, j, (short)0, 5));
+                    queue.Enqueue(new QueueCommand(3, j + 1, (short)0, 2));
                 }
                 else
                 {
-                    queue.Enqueue(new QueueCommand(7, arr[j] + " and " + arr[j+1] + " unchanged"));
-                    decompare(j, j+1, 0, 2);
+                    decompare(j, j+1, 0, 2, 5);
+                    queue.Enqueue(new QueueCommand(7, "" + arr[j].ToString() + " is less than our Insert. Insert is in its sorted spot"));
+                    //queue.Enqueue(new QueueCommand((short)8, i, i, 0, "Insert"));
+                    queue.Enqueue(new QueueCommand());
 
                     break;
                 }
-                decompare(j, j+1, 0, 2);
+                decompare(j, j+1, 0, 5, 2);
+                //queue.Enqueue(new QueueCommand((short)8, j, i, 0, "Insert"));
+                queue.Enqueue(new QueueCommand());
 
             }
             queue.Enqueue(new QueueCommand(7, "Indices 0 through " + i + " are in sorted order"));
+            queue.Enqueue(new QueueCommand((short)8, j+1, i, 0, "Insert"));
+            queue.Enqueue(new QueueCommand(3, j + 1, (short)0, 2));
             queue.Enqueue(new QueueCommand());
 
         }

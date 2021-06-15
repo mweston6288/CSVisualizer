@@ -4,7 +4,8 @@ using UnityEngine;
 using System;
 public class BellmanFord :Graph
 {
-    GameObject boxPrefab;
+    GameObject spherePrefab;
+    [SerializeField] GameObject edgeValue;
     int main;
     bool changesMade;
     protected class BellmanFordVertex : Vertex{
@@ -12,7 +13,7 @@ public class BellmanFord :Graph
         public Edge parentEdge;
         public double weight;
         public bool visited;
-        public BellmanFordVertex(int value, GameObject boxPrefab) : base(value, boxPrefab){
+        public BellmanFordVertex(int value, GameObject spherePrefab) : base(value, spherePrefab){
             weight = double.PositiveInfinity;
         }
     }
@@ -21,10 +22,10 @@ public class BellmanFord :Graph
     {
         vertices = new BellmanFordVertex[vertex];
         for(int i = 0; i < vertex; i++){
-            vertices[i] = new BellmanFordVertex(i, boxPrefab);
+            vertices[i] = new BellmanFordVertex(i, spherePrefab);
         }
         for(int i = 0; i < edge; i++){
-            edges[i] = new Edge(i, r.Next(1,21));
+            edges[i] = new Edge(i, r.Next(1,21), edgeValue);
         }
         main = r.Next(vertex);
         BellmanFordAlgorithm();
