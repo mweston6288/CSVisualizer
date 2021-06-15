@@ -9,6 +9,7 @@ public class BinarySearchUI : MonoBehaviour
 {
      [SerializeField] BinarySearch v;
     [SerializeField] Slider speedSlider;
+    [SerializeField] InputField userInput;
 
     private Boolean isPlay;
     int startSize;
@@ -20,15 +21,15 @@ public class BinarySearchUI : MonoBehaviour
 
         if (startSize == 2)
         {
-            v.setup(21);
+            v.setup(21,15);
         }
         else if (startSize == 1)
         {
-            v.setup(13);
+            v.setup(13,15);
         }
         else
         {
-            v.setup(8);
+            v.setup(8,15);
         }
  
         v.time = 1;
