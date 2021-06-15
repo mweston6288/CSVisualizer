@@ -43,9 +43,11 @@ public class QuickSort : SortingAlgorithm1
             queue.Enqueue(new QueueCommand(6, low, high, 0, 3));
 
             split = partition(low, high);
-            queue.Enqueue(new QueueCommand(6, low, high, 0, 3));
-            queue.Enqueue(new QueueCommand(3, split, (short)0, 2));
+            //queue.Enqueue(new QueueCommand(6, low, high, 0, 3));
+            //queue.Enqueue(new QueueCommand(3, split, (short)0, 2));
 
+            queue.Enqueue(new QueueCommand(6, split+1, high, 0, 0));
+            
             quickSort(low, split - 1);
             quickSort(split + 1, high);
         }
@@ -53,6 +55,11 @@ public class QuickSort : SortingAlgorithm1
         {
             if( low > -1 && low < size)
             {
+            if (low > high)
+            {
+                return;
+            }
+            
             queue.Enqueue(new QueueCommand(7, "Index " + low + " is a single element partition. It is already in its sorted position", 5));
             queue.Enqueue(new QueueCommand());
 
@@ -79,6 +86,7 @@ public class QuickSort : SortingAlgorithm1
         
 
         int pivot = low++; 
+        int pHigh = high;
 
         
         // color the pointers
@@ -234,6 +242,23 @@ public class QuickSort : SortingAlgorithm1
         queue.Enqueue(new QueueCommand(7, "High and Low pointers have crossed, swap High and Pivot!", 5));
         queue.Enqueue(new QueueCommand());
         swap(pivot, high);
+
+        queue.Enqueue(new QueueCommand(3, pivot, (short)0, 6));
+        queue.Enqueue(new QueueCommand(3, high, (short)0, 7));
+        queue.Enqueue(new QueueCommand((short)8, high, low, 0, "High"));
+        queue.Enqueue(new QueueCommand((short)8, high, low, 0, "Pivot"));
+        queue.Enqueue(new QueueCommand((short)8, pivot, low, 0, "High"));
+        
+        if (pivot == high)
+        {
+            queue.Enqueue(new QueueCommand((short)8, pivot, low, 0, "Pivot/High"));
+        }
+        else
+        {
+            queue.Enqueue(new QueueCommand((short)8, pivot, low, 0, "High"));
+        }
+
+        queue.Enqueue(new QueueCommand());
         queue.Enqueue(new QueueCommand(3, pivot, (short)0, 3));
         queue.Enqueue(new QueueCommand(3, high, (short)0, 2));
         queue.Enqueue(new QueueCommand((short)8, high, low, 0, "High"));
@@ -246,7 +271,15 @@ public class QuickSort : SortingAlgorithm1
         if (low < size)
         {
             queue.Enqueue(new QueueCommand((short)8, low, high, 0, "Low"));
-            queue.Enqueue(new QueueCommand(3, low, (short)0, 3));
+
+            if (low <= pHigh)
+            {
+                queue.Enqueue(new QueueCommand(3, low, (short)0, 3));
+            }
+            else
+            {
+                queue.Enqueue(new QueueCommand(3, low, (short)0, 2));
+            }
         }
         
         queue.Enqueue(new QueueCommand());

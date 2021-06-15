@@ -14,7 +14,7 @@ public abstract class SortingAlgorithm1 : Algorithm
     protected Queue<QueueCommand> queue = new Queue<QueueCommand>();
     private GameObject canvas;
     protected TMP_Text showText;
-    private Color green;
+    public Color green;
 
     // This is called in readQueue's default command.
     // The class that extends SortingAlgorithm has to define extra commands
@@ -286,8 +286,8 @@ public abstract class SortingAlgorithm1 : Algorithm
                         break;                        
                     case 3: // change the color of just a single index
                         colorChange(q.index1, q.colorId, array);
-                        showText.text = q.message;
-                        showText.color = colorChangeText(2);
+                        //showText.text = q.message;
+                        //showText.color = colorChangeText(2);
                         break;
                     case 4: // raise two indices up, used to visualize they are being compared
                         array[q.index1].o.transform.position = new Vector3(array[q.index1].o.transform.position.x, array[q.index1].o.transform.position.y + 1, 0);
@@ -312,6 +312,22 @@ public abstract class SortingAlgorithm1 : Algorithm
                         showText.text = q.message;
                         showText.color = colorChangeText(q.textColorId);
                         break;
+                    case 8:
+                        array[q.index1].o.transform.GetChild(1).gameObject.SetActive(!array[q.index1].o.transform.GetChild(1).gameObject.activeInHierarchy);
+                        array[q.index1].o.transform.GetChild(1).GetChild(0).GetComponentInChildren<TextMeshPro>().text = q.message;
+                        break;
+
+                    case 9: // raise up every index from q.index1 to q.index2 inclusively. Used for partitions
+                        for(int i = q.index1; i <= q.index2; i++){
+                            array[i].o.transform.position = new Vector3(array[i].o.transform.position.x, array[i].o.transform.position.y + .25f, 0);
+                        }
+                        break;
+                    case 10: // lower every index from q.index1 to q.index2 inclusively. Used for partitions
+                        for(int i = q.index1; i <= q.index2; i++){
+                            array[i].o.transform.position = new Vector3(array[i].o.transform.position.x, array[i].o.transform.position.y - .25f, 0);
+                        }
+                        break;
+
                     default:
                         extendCommands(q);
                         break;
