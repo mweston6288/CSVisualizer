@@ -14,7 +14,7 @@ public abstract class SortingAlgorithm1 : Algorithm
     protected Queue<QueueCommand> queue = new Queue<QueueCommand>();
     private GameObject canvas;
     protected TMP_Text showText;
-    private Color green;
+    public Color green;
 
     // This is called in readQueue's default command.
     // The class that extends SortingAlgorithm has to define extra commands
@@ -316,6 +316,18 @@ public abstract class SortingAlgorithm1 : Algorithm
                         array[q.index1].o.transform.GetChild(1).gameObject.SetActive(!array[q.index1].o.transform.GetChild(1).gameObject.activeInHierarchy);
                         array[q.index1].o.transform.GetChild(1).GetChild(0).GetComponentInChildren<TextMeshPro>().text = q.message;
                         break;
+
+                    case 9: // raise up every index from q.index1 to q.index2 inclusively. Used for partitions
+                        for(int i = q.index1; i <= q.index2; i++){
+                            array[i].o.transform.position = new Vector3(array[i].o.transform.position.x, array[i].o.transform.position.y + .25f, 0);
+                        }
+                        break;
+                    case 10: // lower every index from q.index1 to q.index2 inclusively. Used for partitions
+                        for(int i = q.index1; i <= q.index2; i++){
+                            array[i].o.transform.position = new Vector3(array[i].o.transform.position.x, array[i].o.transform.position.y - .25f, 0);
+                        }
+                        break;
+
                     default:
                         extendCommands(q);
                         break;
