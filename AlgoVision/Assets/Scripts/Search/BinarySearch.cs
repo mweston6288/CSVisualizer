@@ -1,21 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 public class BinarySearch : Algorithm
 {
     int size;
     int searchToken;
     ArrayIndex[] array;
-
+    [SerializeField] GameObject boxPrefab;
+    [SerializeField] GameObject canvas;
     Queue<QueueCommand> queue = new Queue<QueueCommand>();
     class ArrayIndex{
         public int value;
         public GameObject Object;
-        public ArrayIndex(int value, int index){
+        public ArrayIndex(int value, int index, GameObject boxPrefab){
             this.value = value;
-            Object = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            Object.transform.position = new Vector3(index, 0, 0);
+            Object = GameObject.Instantiate(boxPrefab);
+            Object.transform.position = new Vector3(index*1.28f, 0, 0);
             if (index % 2 == 1){
                 Object.GetComponent<Renderer>().material.color = Color.gray;
             }
@@ -42,21 +43,20 @@ public class BinarySearch : Algorithm
     }
     
     // Start is called before the first frame update
-    void Start()
+    public void setup(int n)
     {
         int i;
-        size = 10;
+        size = n;
         array = new ArrayIndex[size];
         for(i = 0; i < size; i++){
-            array[i] = new ArrayIndex(r.Next(21), i);
+            array[i] = new ArrayIndex(r.Next(21), i, boxPrefab);
         }
         sort();
         for(i = 0; i < size; i++){
-            Debug.Log(array[i].value);
+            array[i].Object.GetComponentInChildren<TextMeshPro>().text = array[i].value.ToString();
         }
         searchToken = r.Next(21);
         search();
-        StartCoroutine(readQueue());
     }
     void sort(){
         int i,j;
