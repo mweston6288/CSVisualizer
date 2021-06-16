@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-public class DijkstraUI : MonoBehaviour
+public class PrimUI : MonoBehaviour
 {
-    [SerializeField] Dijkstra a;
+    [SerializeField] Prim a;
 
     [SerializeField] Slider speedSlider;
     private bool isPlay;
     public GameObject canvas;
     // Start is called before the first frame update
     void Start()
-    { 
+    {
         canvas = GameObject.Find("Canvas");
         speedSlider = canvas.transform.GetChild(1).GetComponent<Slider>();
         a.Setup(3);
@@ -27,7 +27,7 @@ public class DijkstraUI : MonoBehaviour
     }
     public void restartScene()
     {
-        SceneManager.LoadScene("DijkstraScene");
+        SceneManager.LoadScene("PrimScene");
     }
     public void pauseAndPlay()
     {
