@@ -10,7 +10,7 @@ public class MergeSort : SortingAlgorithmWithAuxArray1
 {
     [SerializeField] GameObject boxPrefab;
     [SerializeField] public GameObject canvas;
-
+    int stack;
     private Boolean isPlay;
 
     void Start()
@@ -37,6 +37,7 @@ public class MergeSort : SortingAlgorithmWithAuxArray1
         buildAuxArray(boxPrefab, canvas);
 
         midSplit = (size - 2)/ 2 + 1;
+        stack = 0;
         timer.Restart();
 
         queue.Enqueue(new QueueCommand(7, "Starting Merge Sort", 5));
@@ -56,19 +57,21 @@ public class MergeSort : SortingAlgorithmWithAuxArray1
 
         //int[] leftArray = new int[n1];
         //int[] rightArray = new int[n2];
-        
+        queue.Enqueue(new QueueCommand(7, "Creating the left auxilliary array", 5));
+
         for (i = 0; i < n1; i++)
         {
             auxArr[i] = arr[low+i];
-            queue.Enqueue(new QueueCommand(11, i, low+i, 1));
+            queue.Enqueue(new QueueCommand(10, i, low+i, 1));
             queue.Enqueue(new QueueCommand());
             //leftArray[i] = array[low + i];
         }
+        queue.Enqueue(new QueueCommand(7, "Creating the right auxilliary array", 5));
 
         for (j = 0; j < n2; j++)
         {
             auxArr[j + midSplit] = arr[middle + 1 + j];
-            queue.Enqueue(new QueueCommand(11, j + midSplit, middle + 1 + j, 1));
+            queue.Enqueue(new QueueCommand(10, j + midSplit, middle + 1 + j, 1));
             queue.Enqueue(new QueueCommand());
             //rightArray[j] = array[middle + 1 + j];
         }
@@ -83,7 +86,7 @@ public class MergeSort : SortingAlgorithmWithAuxArray1
             //if (leftArray[i] <= rightArray[j])
             {
                 arr[k] = auxArr[i];
-                queue.Enqueue(new QueueCommand(9, k, i, 1));
+                queue.Enqueue(new QueueCommand(11, k, i, 1));
                 queue.Enqueue(new QueueCommand());
                 decompare(i, j, 1, 0);
       //          q.Enqueue(new short[] {2, (short)i, 4, 1});
@@ -93,7 +96,7 @@ public class MergeSort : SortingAlgorithmWithAuxArray1
             else
             {
                 arr[k] = auxArr[j];
-                queue.Enqueue(new QueueCommand(9, k, j, 1));
+                queue.Enqueue(new QueueCommand(11, k, j, 1));
                 queue.Enqueue(new QueueCommand());
                 decompare(i, j, 1, 0);
         //        q.Enqueue(new short[] {10, (short)k, (short)j, 0});
@@ -106,7 +109,7 @@ public class MergeSort : SortingAlgorithmWithAuxArray1
         while (i < n1)
         {
             arr[k] = auxArr[i];
-            queue.Enqueue(new QueueCommand(9, k, i, 1));
+            queue.Enqueue(new QueueCommand(11, k, i, 1));
             queue.Enqueue(new QueueCommand());
             //q.Enqueue(new short[] {10, (short)k, (short)i, 0});
 //            q.Enqueue(new short[] {2, (short)i, 4, 1});
@@ -116,25 +119,26 @@ public class MergeSort : SortingAlgorithmWithAuxArray1
         while (j < n2+ midSplit)
         {
             arr[k] = auxArr[j];
-            queue.Enqueue(new QueueCommand(9, k, j, 1));
+            queue.Enqueue(new QueueCommand(11, k, j, 1));
             queue.Enqueue(new QueueCommand());
   //          q.Enqueue(new short[] {10, (short)k, (short)j, 0});
     //        q.Enqueue(new short[] {2, (short)j, 4, 1});
             j++;
             k++;
         }
-        queue.Enqueue(new QueueCommand(10, 1));
+        queue.Enqueue(new QueueCommand(12, 1));
     }
 
     private void mergeSort(int low, int high){
+        stack++;
         queue.Enqueue(new QueueCommand(7, "Calling Merge Sort from index " + low + " to index " + high, 5));
+        queue.Enqueue(new QueueCommand(6, low, high, 0, 3));
         queue.Enqueue(new QueueCommand());
         
         if (low < high)
         {
             int med = (low + high - 1) / 2;
 
-            queue.Enqueue(new QueueCommand(6, low, high, 0, 3));
 
             queue.Enqueue(new QueueCommand(7, "Locate the Midpoint of the Array", 5));
             queue.Enqueue(new QueueCommand());
@@ -142,15 +146,44 @@ public class MergeSort : SortingAlgorithmWithAuxArray1
             queue.Enqueue(new QueueCommand());
 
             queue.Enqueue(new QueueCommand((short)8, med, high, 0, "Mid"));
+            
             queue.Enqueue(new QueueCommand(6, low, high, 0, 0));
+            queue.Enqueue(new QueueCommand(9, low, med, 0));
+
             
             mergeSort(low, med);
-            mergeSort(med + 1, high);
+            queue.Enqueue(new QueueCommand(7, "Returning to Merge Sort from index " + low + " to index " + high, 5));
+            queue.Enqueue(new QueueCommand(6, low, high, 0, 3));
 
+            queue.Enqueue(new QueueCommand(10, low, med, 0));
+            queue.Enqueue(new QueueCommand());
+
+            queue.Enqueue(new QueueCommand(6, low, high, 0, 0));
+            queue.Enqueue(new QueueCommand(9, med+1, high, 0));
+            mergeSort(med + 1, high);
+            queue.Enqueue(new QueueCommand(10, med+1, high, 0));
+            queue.Enqueue(new QueueCommand(7, "Returning to Merge Sort from index " + low + " to index " + high, 5));
+            queue.Enqueue(new QueueCommand(6, low, high, 0, 3));
+            queue.Enqueue(new QueueCommand());
+
+            queue.Enqueue(new QueueCommand(7, "Merging indices " + low + " to " + high +" together", 5));
+            queue.Enqueue(new QueueCommand());
 
             merge(low, med, high);
         }
+        queue.Enqueue(new QueueCommand(6, low, high, 0, 0));
 
+    }
+    new public bool compare(int x, int y, short arrayId)
+    {
+        Debug.Log(x + " "+ y);
+        queue.Enqueue(new QueueCommand(4, x, y, arrayId, "Comparing " + auxArr[x] + " to " + auxArr[y]));
+
+        queue.Enqueue(new QueueCommand(1, x, y, arrayId, 1));
+        queue.Enqueue(new QueueCommand());
+
+
+        return true;
     }
 }
 
