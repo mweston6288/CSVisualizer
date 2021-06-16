@@ -78,24 +78,28 @@ public abstract class SortingAlgorithmWithAuxArray1 : SortingAlgorithm1
                 }
                 break;
 
-            case 10: // copy array[q.index2] to auxArray[q.index1] and make auxArray[q.index1] visible
+            case 10: // copy array[q.index2] to auxArray[q.index1]
                 auxArray[q.index1].value = array[q.index2].value;
                 var t = auxArray[q.index1].o.GetComponentInChildren<TextMeshPro>();
                 t.text = auxArray[q.index1].value.ToString();
-                auxArray[q.index1].o.transform.localScale = new Vector3(.75f, .75f, .75f);
                 break;
 
             case 11: // copy auxArray[q.index2] to array[q.index1]
-
                 array[q.index1].value = auxArray[q.index2].value;
                 t = array[q.index1].o.GetComponentInChildren<TextMeshPro>();
                 t.text = array[q.index1].value.ToString();
                 break;
 
             case 12: // shrink all elements in auxArray to 0, effectively hiding them
-
                 for (int i = 0; i < size; i++){
                     auxArray[i].o.transform.localScale = new Vector3(0, 0, 0);
+                }
+                break;
+            case 13: // make the cells in an auxarray visible with empty values
+                for(int i = q.index1; i <= q.index2; i++){
+                    t = auxArray[i].o.GetComponentInChildren<TextMeshPro>();
+                    t.text = "";
+                    auxArray[i].o.transform.localScale = new Vector3(.75f, .75f, .75f);                    
                 }
                 break;
         }
