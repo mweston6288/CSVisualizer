@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using System;
 using Random = System.Random;
 
@@ -159,7 +161,9 @@ public class AVL : Algorithm
         {
             inttree[I] = key; 
             heights[I] = 1;
-            q.Enqueue(new AVLCommand(0, I, key, ("Null node found, creating a new node with the value " + key)));
+
+            q.Enqueue(new AVLCommand(0, I, key, ("Null node found, creating a new node with the value " + key))); // make new node
+            
             if (I != 0) // if the new node isn't at index 0 (the root of the tree) draw a line to the parent node 
             {
                 q.Enqueue(new AVLCommand(1, I, parentI(I), "Linking node to it's new parent."));
@@ -167,6 +171,7 @@ public class AVL : Algorithm
             q.Enqueue(new AVLCommand(-1, 0, 0, ""));
             return;
         }
+
         q.Enqueue(new AVLCommand(2, I, 1, "Null node not found")); // null node not found, highlight current node to show insertion path
         q.Enqueue(new AVLCommand(-1, 0, 0, ""));
         if (inttree[I] > key) // go left
@@ -190,7 +195,7 @@ public class AVL : Algorithm
 
         if (balance > 1)
         {
-            if (key >= inttree[leftCI(I)])
+            if (key >= inttree[leftCI(I)]) // if left-right
             {
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Node is left heavy and subtree is right heavy: Left-Right case"));
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Performing left rotate on left subtree."));
@@ -198,7 +203,7 @@ public class AVL : Algorithm
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Performing right rotate on node."));
                 rRotate(I);
             }
-            else
+            else // if left-left
             {
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Node is left heavy and subtree is left heavy: Left-Left case"));
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Performing right rotate on node."));
@@ -207,7 +212,7 @@ public class AVL : Algorithm
         }
         else if (balance < -1)
         {
-            if (key < inttree[rightCI(I)])
+            if (key < inttree[rightCI(I)]) // right -left
             {
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Node is right heavy and subtree is left heavy: Right-Left case"));
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Performing left rotate on left subtree."));
@@ -215,7 +220,7 @@ public class AVL : Algorithm
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Performing left rotate on node."));
                 lRotate(I);
             }
-            else
+            else // right-right
             {
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Node is right heavy and subtree is right heavy: Right-Right case"));
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Performing left rotate on node."));
@@ -706,9 +711,12 @@ public class AVL : Algorithm
 
                 case 0: // create a node, (0, index, value)
                     Nodetree[instr.arg1] = new AVLNode(instr.arg2, instr.arg1);
+                    /*Nodetree[instr.arg1].o = GameObject.Instantiate(boxPrefab);
+                    var t = Nodetree[instr.arg1].o.GetComponentInChildren<TextMeshPro>();
+                    t.text = Nodetree[instr.arg1].value.ToString(); */
                     Nodetree[instr.arg1].o = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                  //  Nodetree[instr.arg1].o.transform.localScale = new Vector3(1f, 1f, (float)instr.arg2 / 10);
-                  //  Nodetree[instr.arg1].o.tag = instr.arg2.ToString();
+                    //  Nodetree[instr.arg1].o.transform.localScale = new Vector3(1f, 1f, (float)instr.arg2 / 10);
+                    //  Nodetree[instr.arg1].o.tag = instr.arg2.ToString();
                     Nodetree[instr.arg1].updateCoords();
                     break;
 
@@ -771,8 +779,11 @@ public class AVL : Algorithm
 
                 case 3: // move node (3, node, destination)
                     Nodetree[instr.arg2] = new AVLNode(Nodetree[instr.arg1].value, instr.arg2);
+                    /*Nodetree[instr.arg2].o = GameObject.Instantiate(boxPrefab);
+                    var T = Nodetree[instr.arg2].o.GetComponentInChildren<TextMeshPro>();
+                    T.text = Nodetree[instr.arg2].value.ToString();*/
                     Nodetree[instr.arg2].o = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                   // Nodetree[instr.arg2].o.transform.localScale = new Vector3(1f, 1f, (float)Nodetree[instr.arg2].value / 10);
+                    // Nodetree[instr.arg2].o.transform.localScale = new Vector3(1f, 1f, (float)Nodetree[instr.arg2].value / 10);
                     Nodetree[instr.arg2].o.GetComponent<Renderer>().material.color = Nodetree[instr.arg1].o.GetComponent<Renderer>().material.color;
                     //Nodetree[instr.arg1].o.tag = instr.arg2.ToString();
                     Nodetree[instr.arg2].updateCoords();
