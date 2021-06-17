@@ -4,8 +4,8 @@ using UnityEngine;
 using System;
 public class Prim : Graph
 {
-    GameObject spherePrefab;
-    GameObject edgeValue;
+    [SerializeField] GameObject spherePrefab;
+    [SerializeField] GameObject edgeValue;
     int main;
     protected static List head;
     // Start is called before the first frame update
@@ -37,7 +37,7 @@ public class Prim : Graph
             temp1.next.next = temp2;
         }
     }
-    void Start()
+    public void Setup(int main)
     {
         vertices = new PrimVertex[vertex];
         for(int i = 0; i < vertex; i++){
@@ -47,10 +47,10 @@ public class Prim : Graph
             edges[i] = new Edge(i, r.Next(1,21), edgeValue);
         }
         //setCam();
-        main = r.Next(vertex);
+        this.main = main; //= r.Next(vertex);
         //PrimAlgorithm();
         BreadthFirstSearch(main);
-        StartCoroutine(readQueue());        
+        //StartCoroutine(readQueue());        
     }
     void PrimAlgorithm(){
         head = new List(null); // junk data to initialize

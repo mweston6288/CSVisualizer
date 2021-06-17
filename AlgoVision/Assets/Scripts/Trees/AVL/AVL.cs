@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using System;
 using Random = System.Random;
 
@@ -15,6 +17,8 @@ public class AVL : Algorithm
     protected int[] heights;
     protected static float[] Xcoords;
     protected static float[] Ycoords;
+
+    [SerializeField] GameObject spherePrefab;
 
     protected class AVLNode // class used to make node for visualization
     {
@@ -51,7 +55,7 @@ public class AVL : Algorithm
 
     void Start() // starts here
     {
-        string text = "";
+        string text = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,62,63";
 
         size = 31; // number of keys to be inserted
         int[] keys; // where the keys are stored in insertion order
@@ -125,7 +129,7 @@ public class AVL : Algorithm
             keys = new int[size];
             for(int i = 0; i < size; i++)
             {
-                int ins = r.Next(1, 101);
+                int ins = r.Next(1, 1000);
                 keys[i] = ins;
                 order = order + ins.ToString() + ", "; // adds the inserted number to the string for printing
             }
@@ -146,7 +150,7 @@ public class AVL : Algorithm
         setCoords();
 
         
-        StartCoroutine(readQueue(0.02f));
+        StartCoroutine(readQueue(0.0f));
     }
 
     void insert(int key, int I)
@@ -159,7 +163,9 @@ public class AVL : Algorithm
         {
             inttree[I] = key; 
             heights[I] = 1;
-            q.Enqueue(new AVLCommand(0, I, key, ("Null node found, creating a new node with the value " + key)));
+
+            q.Enqueue(new AVLCommand(0, I, key, ("Null node found, creating a new node with the value " + key))); // make new node
+            
             if (I != 0) // if the new node isn't at index 0 (the root of the tree) draw a line to the parent node 
             {
                 q.Enqueue(new AVLCommand(1, I, parentI(I), "Linking node to it's new parent."));
@@ -167,16 +173,17 @@ public class AVL : Algorithm
             q.Enqueue(new AVLCommand(-1, 0, 0, ""));
             return;
         }
+
         q.Enqueue(new AVLCommand(2, I, 1, "Null node not found")); // null node not found, highlight current node to show insertion path
         q.Enqueue(new AVLCommand(-1, 0, 0, ""));
         if (inttree[I] > key) // go left
         {
-            q.Enqueue(new AVLCommand(-1, 0, 0, ("Current Node's key: " + inttree[I] + "> Inserted key: " + key + ". continue down left subtree")));
+            q.Enqueue(new AVLCommand(-1, 0, 0, ("Current Node's key: " + inttree[I] + " > Inserted key: " + key + ". continue down left subtree")));
             insert(key, leftCI(I));
         }
         else // go right
         {
-            q.Enqueue(new AVLCommand(-1, 0, 0, ("Current Node's key: " + inttree[I] + "< Inserted key: " + key + ". continue down right subtree")));
+            q.Enqueue(new AVLCommand(-1, 0, 0, ("Current Node's key: " + inttree[I] + " < Inserted key: " + key + ". continue down right subtree")));
             insert(key, rightCI(I));
         }
 
@@ -190,7 +197,7 @@ public class AVL : Algorithm
 
         if (balance > 1)
         {
-            if (key >= inttree[leftCI(I)])
+            if (key >= inttree[leftCI(I)]) // if left-right
             {
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Node is left heavy and subtree is right heavy: Left-Right case"));
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Performing left rotate on left subtree."));
@@ -198,7 +205,7 @@ public class AVL : Algorithm
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Performing right rotate on node."));
                 rRotate(I);
             }
-            else
+            else // if left-left
             {
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Node is left heavy and subtree is left heavy: Left-Left case"));
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Performing right rotate on node."));
@@ -207,7 +214,7 @@ public class AVL : Algorithm
         }
         else if (balance < -1)
         {
-            if (key < inttree[rightCI(I)])
+            if (key < inttree[rightCI(I)]) // right -left
             {
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Node is right heavy and subtree is left heavy: Right-Left case"));
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Performing left rotate on left subtree."));
@@ -215,7 +222,7 @@ public class AVL : Algorithm
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Performing left rotate on node."));
                 lRotate(I);
             }
-            else
+            else // right-right
             {
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Node is right heavy and subtree is right heavy: Right-Right case"));
                 q.Enqueue(new AVLCommand(-1, 0, 0, "Performing left rotate on node."));
@@ -261,7 +268,7 @@ public class AVL : Algorithm
 
                 for (int j = (int)Math.Pow(2, i) - 1; j < (int)Math.Pow(2, i + 1) - 1; j++)
                 {
-                    float x = (float)n / 5 * (float)Xcoords.Length / (float)d;
+                    float x = (float)n / 3.1f * (float)Xcoords.Length / (float)d;
                     n = n + 2;
 
                     Xcoords[j] = x;
@@ -279,7 +286,7 @@ public class AVL : Algorithm
 
                 for (int j = (int)Math.Pow(2, i) - 1; j < (int)Math.Pow(2, i + 1) - 1; j++)
                 {
-                    float x = (float)n / 5 * (float)Xcoords.Length / (float)d;
+                    float x = (float)n / 3.1f * (float)Xcoords.Length / (float)d;
                     n = n + 2;
 
                     Xcoords[j] = x;
@@ -689,10 +696,12 @@ public class AVL : Algorithm
 
     public IEnumerator readQueue(float time)
     {
+        GameObject canvas = GameObject.Find("Canvas");
         foreach (AVLCommand instr in q)
         {
             if(instr.message != "" && instr.message != null)
             {
+                canvas.transform.GetChild(3).GetComponent<TMP_Text>().text = instr.message;
                 Debug.Log(instr.message);
             }
 
@@ -706,18 +715,20 @@ public class AVL : Algorithm
 
                 case 0: // create a node, (0, index, value)
                     Nodetree[instr.arg1] = new AVLNode(instr.arg2, instr.arg1);
-                    Nodetree[instr.arg1].o = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                  //  Nodetree[instr.arg1].o.transform.localScale = new Vector3(1f, 1f, (float)instr.arg2 / 10);
-                  //  Nodetree[instr.arg1].o.tag = instr.arg2.ToString();
+                    Nodetree[instr.arg1].o = GameObject.Instantiate(spherePrefab);
+                    var t = Nodetree[instr.arg1].o.GetComponentInChildren<TextMeshPro>();
+                    t.text = Nodetree[instr.arg1].value.ToString();
+                    //Nodetree[instr.arg1].o = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    //  Nodetree[instr.arg1].o.transform.localScale = new Vector3(1f, 1f, (float)instr.arg2 / 10);
+                    //  Nodetree[instr.arg1].o.tag = instr.arg2.ToString();
                     Nodetree[instr.arg1].updateCoords();
                     break;
 
                 case 1: // link two nodes, (1, child, parent)
                     Nodetree[instr.arg1].parentEdge = new GameObject("Line").AddComponent(typeof(LineRenderer)) as LineRenderer;
-                    Nodetree[instr.arg1].parentEdge.GetComponent<LineRenderer>().startColor = Color.black;
-                    Nodetree[instr.arg1].parentEdge.GetComponent<LineRenderer>().endColor = Color.black;
-                    Nodetree[instr.arg1].parentEdge.GetComponent<LineRenderer>().startWidth = .05f;
-                    Nodetree[instr.arg1].parentEdge.GetComponent<LineRenderer>().endWidth = .05f;
+                    Nodetree[instr.arg1].parentEdge.GetComponent<LineRenderer>().material.color = Color.white;
+                    Nodetree[instr.arg1].parentEdge.GetComponent<LineRenderer>().startWidth = .1f;
+                    Nodetree[instr.arg1].parentEdge.GetComponent<LineRenderer>().endWidth = .1f;
                     Nodetree[instr.arg1].parentEdge.GetComponent<LineRenderer>().positionCount = 2;
                     Nodetree[instr.arg1].parentEdge.GetComponent<LineRenderer>().useWorldSpace = true;
                     Nodetree[instr.arg1].parentEdge.SetPosition(0, new Vector3(Xcoords[instr.arg1], Ycoords[instr.arg1], 0)); //x,y and z position of the starting point of the line
@@ -771,8 +782,11 @@ public class AVL : Algorithm
 
                 case 3: // move node (3, node, destination)
                     Nodetree[instr.arg2] = new AVLNode(Nodetree[instr.arg1].value, instr.arg2);
-                    Nodetree[instr.arg2].o = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                   // Nodetree[instr.arg2].o.transform.localScale = new Vector3(1f, 1f, (float)Nodetree[instr.arg2].value / 10);
+                    Nodetree[instr.arg2].o = GameObject.Instantiate(spherePrefab);
+                    var T = Nodetree[instr.arg2].o.GetComponentInChildren<TextMeshPro>();
+                    T.text = Nodetree[instr.arg2].value.ToString();
+                    //Nodetree[instr.arg2].o = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    // Nodetree[instr.arg2].o.transform.localScale = new Vector3(1f, 1f, (float)Nodetree[instr.arg2].value / 10);
                     Nodetree[instr.arg2].o.GetComponent<Renderer>().material.color = Nodetree[instr.arg1].o.GetComponent<Renderer>().material.color;
                     //Nodetree[instr.arg1].o.tag = instr.arg2.ToString();
                     Nodetree[instr.arg2].updateCoords();
@@ -784,10 +798,9 @@ public class AVL : Algorithm
                     if (instr.arg2 != 0)
                     {
                         Nodetree[instr.arg2].parentEdge = new GameObject("Line").AddComponent(typeof(LineRenderer)) as LineRenderer;
-                        Nodetree[instr.arg2].parentEdge.GetComponent<LineRenderer>().startColor = Color.black;
-                        Nodetree[instr.arg2].parentEdge.GetComponent<LineRenderer>().endColor = Color.black;
-                        Nodetree[instr.arg2].parentEdge.GetComponent<LineRenderer>().startWidth = .05f;
-                        Nodetree[instr.arg2].parentEdge.GetComponent<LineRenderer>().endWidth = .05f;
+                        Nodetree[instr.arg2].parentEdge.GetComponent<LineRenderer>().material.color = Color.white;
+                        Nodetree[instr.arg2].parentEdge.GetComponent<LineRenderer>().startWidth = .1f;
+                        Nodetree[instr.arg2].parentEdge.GetComponent<LineRenderer>().endWidth = .1f;
                         Nodetree[instr.arg2].parentEdge.GetComponent<LineRenderer>().positionCount = 2;
                         Nodetree[instr.arg2].parentEdge.GetComponent<LineRenderer>().useWorldSpace = true;
                         Nodetree[instr.arg2].parentEdge.SetPosition(0, new Vector3(Xcoords[instr.arg2], Ycoords[instr.arg2], 0)); 
@@ -1100,10 +1113,6 @@ public class AVL : Algorithm
     */
 
 
-
-
-
-
 /*
  // extends the TreeNode class by adding AVL elements
     // NOTES: AVLNode.children is inherited but 
@@ -1209,6 +1218,3 @@ void Update()
 
 }
 */
-
-
-//  

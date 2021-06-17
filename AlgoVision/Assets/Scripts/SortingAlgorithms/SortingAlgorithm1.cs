@@ -10,7 +10,7 @@ public abstract class SortingAlgorithm1 : Algorithm
     protected ArrayIndex[] array;
     public int size;
     public int[] arr;
-    public int comparisons, swaps;
+    public int comparisons, swaps, accesses;
     protected Queue<QueueCommand> queue = new Queue<QueueCommand>();
     private GameObject canvas;
     protected TMP_Text showText;
@@ -164,7 +164,7 @@ public abstract class SortingAlgorithm1 : Algorithm
         this.size = size;
         arr = new int[size];
         array = new ArrayIndex[size];
-        comparisons = swaps = 0;
+        comparisons = swaps = accesses = 0;
         sort();
         setCam();
     }
@@ -271,15 +271,14 @@ public abstract class SortingAlgorithm1 : Algorithm
                     case 0: // wait
                         yield return new WaitForSeconds(time);
                         break;
-                    
                     case 1: // change the color of two indices
                         colorChange(q.index1, q.colorId, array);
                         colorChange(q.index2, q.colorId, array);
-                        // Debug.Log("Comparing values at Index "+ q.index1 + " and "+ q.index2);
                         break;
                     case 2: // swap the positions of two indices
                         swap(ref array[q.index1], ref array[q.index2]);
                         swaps++;
+                        accesses += 2;
                         // Debug.Log("Swapping values at Index "+ q.index1 + " and "+ q.index2);
                         showText.text = q.message;
                         showText.color = colorChangeText(1);
@@ -295,6 +294,7 @@ public abstract class SortingAlgorithm1 : Algorithm
                         showText.enabled = true;
                         showText.text = q.message;
                         comparisons++;
+                        accesses += 2;
                         // red color
                         var red = new Color(1f, .2f, .361f, 1);
                         showText.color = red;//colorChangeText(1);

@@ -8,6 +8,7 @@ public abstract class Graph : Algorithm // MonoBehaviour is the root class for U
 {
     // Store vertex values of their coordinate
     public static int[,] vertexBluePrints = new int[,]{{0,2},{2,4},{2,0},{6,4},{6,0},{8,2}};
+    public static float[,] vertexText = new float[,] { { -3f, 2f }, { 1.5f, 5.5f }, { 1.5f, -1.5f }, { 5.5f, 5.5f }, { 5.5f, -1.5f }, { 9f, 2f } };
     // Store edge values of vertex neighbors
     public static int [,] edgeBluePrints = new int[,]{{0,1},{0,2},{1,2},{1,3},{2,3},{2,4},{3,4},{3,5},{4,5}};
     public static float[,] edgePosition = new float[,] { { 0.75f, 3.33f }, { 0.75f, 0.67f }, { 1.75f, 2f }, { 3.9f, 4.5f }, { 4f, 2.5f }, { 4f, -0.5f }, { 6.35f, 2f }, { 7.25f, 3.33f }, { 7.25f, 0.67f } };

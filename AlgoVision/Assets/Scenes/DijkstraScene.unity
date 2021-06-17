@@ -436,7 +436,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 709049006}
-        m_TargetAssemblyTypeName: QuickSort, Assembly-CSharp
+        m_TargetAssemblyTypeName: DijkstraUI, Assembly-CSharp
         m_MethodName: pauseAndPlay
         m_Mode: 1
         m_Arguments:
@@ -1143,21 +1143,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 709049005}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 178489e8554ca6af3938a16978ab9102, type: 3}
+  m_Script: {fileID: 11500000, guid: 350e2a0b3d89befa5b4137c6032e121d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  time: 0
-  completionPercent: 0
-  stopTime: 0
-  currentTime: 0
-  green: {r: 0.533, g: 0.671, b: 0.459, a: 1}
-  blue: {r: 0.6, g: 0.686, b: 0.761, a: 1}
-  red: {r: 1, g: 0.2, b: 0.361, a: 1}
-  size: 0
-  arr: 
-  comparisons: 0
-  swaps: 0
-  boxPrefab: {fileID: 0}
+  a: {fileID: 0}
+  speedSlider: {fileID: 0}
   canvas: {fileID: 0}
 --- !u!114 &709049007
 MonoBehaviour:
@@ -2736,7 +2726,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.105882354, g: 0.1254902, b: 0.23921569, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -3227,6 +3217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   a: {fileID: 673926923}
   speedSlider: {fileID: 2078145411}
+  canvas: {fileID: 709049005}
 --- !u!1 &1624740894
 GameObject:
   m_ObjectHideFlags: 0
@@ -3624,8 +3615,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1721085623}
-        m_TargetAssemblyTypeName: Restart, Assembly-CSharp
+      - m_Target: {fileID: 709049006}
+        m_TargetAssemblyTypeName: DijkstraUI, Assembly-CSharp
         m_MethodName: restartScene
         m_Mode: 1
         m_Arguments:
