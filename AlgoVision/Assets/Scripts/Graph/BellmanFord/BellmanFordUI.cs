@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-public class DijkstraUI : MonoBehaviour
+public class BellmanFordUI : MonoBehaviour
 {
-    [SerializeField] Dijkstra a;
+    [SerializeField] BellmanFord a;
 
-    [SerializeField] Slider speedSlider;
+    //SerializeField] Slider speedSlider;
     private bool isPlay;
     public GameObject canvas;
     // Start is called before the first frame update
     void Start()
-    { 
+    {
         canvas = GameObject.Find("Canvas");
-        speedSlider = canvas.transform.GetChild(1).GetComponent<Slider>();
+        //speedSlider = canvas.transform.GetChild(1).GetComponent<Slider>();
         a.Setup(3);
         StartCoroutine(a.readQueue());
     }
@@ -27,7 +27,7 @@ public class DijkstraUI : MonoBehaviour
     }
     public void restartScene()
     {
-        SceneManager.LoadScene("DijkstraScene");
+        SceneManager.LoadScene("BellmanFordScene");
     }
     public void pauseAndPlay()
     {
