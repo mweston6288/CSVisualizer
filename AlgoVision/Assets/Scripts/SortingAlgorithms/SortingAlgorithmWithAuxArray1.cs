@@ -11,6 +11,7 @@ public abstract class SortingAlgorithmWithAuxArray1 : SortingAlgorithm1
     public int[] auxArr;
     public int[] countingArray; // for counting and radix sort
 
+    public int auxAccesses;
     protected class AuxArrayIndex : ArrayIndex{
         
 
@@ -64,6 +65,7 @@ public abstract class SortingAlgorithmWithAuxArray1 : SortingAlgorithm1
                 showText.enabled = true;
                 showText.text = q.message;
                 comparisons++;
+                auxAccesses += 2;
                 // red color
                 var blue = new Color(0.6f, 0.686f, 0.761f);
                 showText.color = blue;
@@ -85,12 +87,16 @@ public abstract class SortingAlgorithmWithAuxArray1 : SortingAlgorithm1
                 auxArray[q.index1].value = array[q.index2].value;
                 var t = auxArray[q.index1].o.GetComponentInChildren<TextMeshPro>();
                 t.text = auxArray[q.index1].value.ToString();
+                auxAccesses++;
+                accesses++;
                 break;
 
             case 11: // copy auxArray[q.index2] to array[q.index1]
                 array[q.index1].value = auxArray[q.index2].value;
                 t = array[q.index1].o.GetComponentInChildren<TextMeshPro>();
                 t.text = array[q.index1].value.ToString();
+                auxAccesses++;
+                accesses++;
                 break;
 
             case 12: // shrink all elements in auxArray to 0, effectively hiding them
@@ -102,7 +108,7 @@ public abstract class SortingAlgorithmWithAuxArray1 : SortingAlgorithm1
                 for(int i = q.index1; i <= q.index2; i++){
                     t = auxArray[i].o.GetComponentInChildren<TextMeshPro>();
                     t.text = "";
-                    auxArray[i].o.transform.localScale = new Vector3(.75f, .75f, .75f);                    
+                    auxArray[i].o.transform.localScale = new Vector3(.75f, .75f, .75f);
                 }
                 break;
         }
