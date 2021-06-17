@@ -113,19 +113,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
-<<<<<<< HEAD
-  m_Name: Roboto-Bold_SDF
-  m_EditorClassIdentifier: 
-  hashCode: -631000595
-  material: {fileID: 2164040}
-  materialHashCode: -2051006931
-=======
-  m_Name: Roboto-Bold SDF
-  m_EditorClassIdentifier: 
-  hashCode: -635320526
-  material: {fileID: 2164040}
-  materialHashCode: -1838732846
->>>>>>> c86a12493ae30faa4d61105f7fd836d4b829a60e
   m_Version: 1.1.0
   m_SourceFontFileGUID: 4beb055f07aaff244873dec698d0363e
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 4beb055f07aaff244873dec698d0363e, type: 3}
