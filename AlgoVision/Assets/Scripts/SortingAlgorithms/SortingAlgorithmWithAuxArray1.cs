@@ -77,7 +77,10 @@ public abstract class SortingAlgorithmWithAuxArray1 : SortingAlgorithm1
                     colorChange(i, q.colorId, auxArray);
                 }
                 break;
-
+            case 8:
+                auxArray[q.index1].o.transform.GetChild(1).gameObject.SetActive(!auxArray[q.index1].o.transform.GetChild(1).gameObject.activeInHierarchy);
+                auxArray[q.index1].o.transform.GetChild(1).GetChild(0).GetComponentInChildren<TextMeshPro>().text = q.message;
+                break;
             case 10: // copy array[q.index2] to auxArray[q.index1]
                 auxArray[q.index1].value = array[q.index2].value;
                 var t = auxArray[q.index1].o.GetComponentInChildren<TextMeshPro>();
