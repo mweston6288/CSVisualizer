@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-public class BellmanFord :Graph
+public class BellmanFord : Graph
 {
-    GameObject spherePrefab;
-    [SerializeField] GameObject edgeValue;
     int main;
+    [SerializeField] GameObject spherePrefab;
+    [SerializeField] GameObject edgeValue;
     bool changesMade;
     protected class BellmanFordVertex : Vertex{
         public BellmanFordVertex parent;
@@ -18,7 +18,7 @@ public class BellmanFord :Graph
         }
     }
     // Start is called before the first frame update
-    void Start()
+    public void Setup(int main)
     {
         vertices = new BellmanFordVertex[vertex];
         for(int i = 0; i < vertex; i++){
@@ -27,9 +27,10 @@ public class BellmanFord :Graph
         for(int i = 0; i < edge; i++){
             edges[i] = new Edge(i, r.Next(1,21), edgeValue);
         }
-        main = r.Next(vertex);
+        //main = r.Next(vertex);
+        this.main = main;
         BellmanFordAlgorithm();
-        StartCoroutine(readQueue());       
+        //StartCoroutine(readQueue());       
     }
     void BellmanFordAlgorithm(){
         int i,j,k;
