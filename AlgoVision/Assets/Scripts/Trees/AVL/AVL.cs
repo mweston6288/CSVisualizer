@@ -9,7 +9,7 @@ using Random = System.Random;
 public class AVL : Algorithm
 {
     protected int treeDepth; // lowest level of tree
-    protected int size;
+    public int size;
     protected Queue q = new Queue();
     protected Random r = new Random();
     protected AVLNode[] Nodetree;
@@ -53,7 +53,52 @@ public class AVL : Algorithm
         }
     }
 
-    void Start() // starts here
+    public void insertRandom(int keyAmount)
+    {
+        size = keyAmount; // number of keys to be inserted
+        int[] keys; // where the keys are stored in insertion order
+        string order = ""; // for debugging purposes. stores the keys in order inserted
+        treeDepth = 2; // the depth of the tree is initialized. can/will be updated by program as the tree is added to as needed.
+
+        inttree = new int[(int)Math.Pow(2, treeDepth) - 1]; // initializes the array where the keys are stored in the AVL tree
+        heights = new int[(int)Math.Pow(2, treeDepth) - 1]; // initialized the array where node heights are stored
+
+        for (int i = 0; i < inttree.Length; i++)
+        {
+            inttree[i] = -1; // if a node is null, it's key is -1
+            heights[i] = 0; // default height is zero
+        }
+
+        keys = new int[size];
+        for (int i = 0; i < size; i++)
+        {
+            int ins = r.Next(1, 1000);
+            keys[i] = ins;
+            order = order + ins.ToString() + ", "; // adds the inserted number to the string for printing
+        }
+
+        Debug.Log(order); // prints the keys in order of insertion
+
+        for (int i = 0; i < keys.Length; i++) // insertion of keys
+        {
+            insert(keys[i], 0);
+        }
+
+        printIntTree();
+        printHeights();
+        Nodetree = new AVLNode[inttree.Length * 2 + 1];
+        Xcoords = new float[Nodetree.Length];
+        Ycoords = new float[Nodetree.Length];
+        setCoords();
+
+
+        //StartCoroutine(readQueue(0.0f));
+    }
+
+
+
+
+    void customInserts() // starts here
     {
         string text = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,62,63";
 
